@@ -1,0 +1,5 @@
+/freertos
+/?
+/a.*
+/*.o
+/*.elf
