@@ -1,5 +1,6 @@
 /freertos
 /?
 /a.*
-/*.o
-/*.elf
+/.ninja_log
+/.ninja_deps
+/obj

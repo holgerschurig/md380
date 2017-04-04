@@ -1,120 +1,89 @@
+
 #include <stdint.h>
+#include <string.h>
+#include "FreeRTOS.h"
+#include "semphr.h"
+#include "task.h"
+#include "led.h"
 #include "gpio.h"
-#include "stm32f4xx.h"
+#include "usb_cdc.h"
 
-static void led_setup(void);
-static void green_led(int);
-static void red_led(int);
 static void sleep(uint32_t);
-static void jump_to_app(void);
 
-int main(void) {
+static void output_main(void*);
+static void red_main(void*);
+static SemaphoreHandle_t red_monitor;
+
+int main (void) {
+	red_monitor = xSemaphoreCreateMutex();
+	xTaskCreate(output_main, "out", 256, NULL, 1, NULL);
+	xTaskCreate(red_main, "red", 256, NULL, 0, NULL);
+	vTaskStartScheduler();
+	for(;;);
+}
+
+static int  red_state;
+static void set_red_state(int i) {
+	xSemaphoreTake(red_monitor, portMAX_DELAY);
+	red_state = i;
+	xSemaphoreGive(red_monitor);
+}
+static int  get_red_state() {
+	int i;
+	xSemaphoreTake(red_monitor, portMAX_DELAY);
+	i = red_state;
+	xSemaphoreGive(red_monitor);
+	return i;
+}
+
+
+static void led_set(int red, int green) {
+	red_led(red);
+	green_led(green);
+
+	const char red_on[] = "red on,  ";
+	const char red_off[] = "red off, ";
+	const char green_on[] = "green on\n";
+	const char green_off[] = "green off\n";
+	#define SEND_STR(s) usb_cdc_write((void*)(s), strlen(s))
+	SEND_STR(red?red_on:red_off);
+	SEND_STR(green?green_on:green_off);
+	#undef SEND_STR
+}
+
+static void input_setup(struct pin *pin) {
+	pin_enable(pin);
+	pin_set_mode(pin, PIN_MODE_INPUT);
+	pin_set_pupd(pin, PIN_PUPD_NONE);
+}
+
+static void output_main(void* machtnichts) {
 
 	led_setup();
+	usb_cdc_init();
 
-	for(int i = 0; i < 4; i++) {
+	input_setup(pin_e11);
 
-		red_led(1);
-		green_led(1);
-
-		sleep(500);
-
-		red_led(0);
-		green_led(0);
-
-		sleep(500);
-
-		red_led(1);
-
-		sleep(500);
-
-		red_led(0);
-
-		sleep(500);
-	}
-	jump_to_app();
-}
-
-
-static void led_pin_setup(struct pin *pin) {
-	pin_enable(pin);
-	pin_set_mode(pin, PIN_MODE_OUTPUT);
-	pin_set_otype(pin, PIN_TYPE_PUSHPULL);
-	pin_set_ospeed(pin, PIN_SPEED_2MHZ);
-	pin_set_pupd(pin, PIN_PUPD_NONE);
-	pin_reset(pin);
-}
-
-static void led_setup(void) {
-	led_pin_setup(pin_e0);
-	led_pin_setup(pin_e1);
-}
-
-static void green_led(int on) {
-	if (on) {
-		pin_set(pin_e0);
-	} else {
-		pin_reset(pin_e0);
+	for(;;) {
+		// PTT is active low
+		int ptt = !pin_read(pin_e11);
+		int red = get_red_state();
+		led_set(red, ptt);
+		sleep(50);
 	}
 }
 
-static void red_led(int on) {
-	if (on) {
-		pin_set(pin_e1);
-	} else {
-		pin_reset(pin_e1);
+static void red_main(void* machtnichts) {
+
+	for(;;){
+		set_red_state(0);
+		sleep(500);
+		set_red_state(1);
+		sleep(500);
 	}
 }
 
 static void sleep(uint32_t ms) {
-	for (uint32_t i = 0; i < ms; i++) {
-		/* At 168MHz sysclock, and -Os, this loop will take 4 instructions.
-		 * Confirmed with measurement. */
-		for (uint32_t j = 0; j < 168000; j += 4) {
-			__asm volatile ("mov r0,r0");
-		}
-	}
+	vTaskDelay(ms);
 }
 
-
-static void do_jump(uint32_t stacktop, uint32_t entrypoint)
-{
-	__asm volatile(
-			"msr msp, %0	\n"
-			"bx %1	\n"
-			: : "r" (stacktop), "r" (entrypoint) : );
-	for(;;); // Unreachable
-}
-
-#define APP_LOAD_ADDRESS 0x0800C000
-
-static void jump_to_app(void) {
-
-	const uint32_t *app_base = (const uint32_t *)APP_LOAD_ADDRESS;
-
-	// Check that flash has been programmed
-	if (app_base[0] == 0xffffffff)
-		goto fail;
-
-	// Check that reset vector is somewhere in the app's boundaries
-	if (app_base[1] < APP_LOAD_ADDRESS)
-		goto fail;
-	if (app_base[1] >= (APP_LOAD_ADDRESS + (1024 * 1024)))
-			goto fail;
-
-	// LEDs to known state
-	green_led(1);
-	red_led(0);
-
-	// Set vector table address
-	SCB->VTOR = APP_LOAD_ADDRESS;
-
-	// Jump to the application
-	do_jump(app_base[0], app_base[1]);
-
-	// LEDs indicate error
-	fail:
-	green_led(0);
-	red_led(0);
-	for(;;);
-}

@@ -1,0 +1,69 @@
+cross = arm-none-eabi
+rtos_arch = ARM_CM4F
+cc = ${cross}-gcc
+ld = ${cross}-ld
+ar = ${cross}-ar
+objcopy = ${cross}-objcopy
+c_def = -DARM_CM4F
+c_std = -std=c99
+c_cpu = -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard
+c_opt = -O3 -fomit-frame-pointer
+cflags = $c_std $c_def $c_cpu $c_opt
+includes = -I. -Istm -Ifreertos/FreeRTOS/Source/include -Ifreertos/FreeRTOS/Source/portable/GCC/${rtos_arch}
+
+rule cc
+  command = $cc $cflags $includes -c $in -o $out
+  #desc = CC  $in
+
+rule ar
+  command = $ar rcs $out $in
+  #desc = LD  $out
+  
+rule ld
+  command = $cc $c_cpu $c_opt $in -nostartfiles -Tmd380.lds -Xlinker -o$out
+  #desc = LD  $out
+
+rule objcopy
+  command = $objcopy -O binary $in $out
+
+# FreeRTOS sources
+#build obj/croutine.o: cc freertos/FreeRTOS/Source/croutine.c
+#build obj/event_groups.o: cc freertos/FreeRTOS/Source/event_groups.c
+build obj/list.o: cc freertos/FreeRTOS/Source/list.c
+build obj/queue.o: cc freertos/FreeRTOS/Source/queue.c
+build obj/tasks.o: cc freertos/FreeRTOS/Source/tasks.c
+#build obj/timers.o: cc freertos/FreeRTOS/Source/timers.c
+build obj/heap.o: cc freertos/FreeRTOS/Source/portable/MemMang/heap_1.c
+build obj/port.o: cc freertos/FreeRTOS/Source/portable/GCC/${rtos_arch}/port.c
+build obj/freertos.a: ar obj/list.o obj/queue.o obj/tasks.o obj/heap.o obj/port.o
+
+# Hardware library
+build obj/fault.o: cc stm/fault.c
+build obj/gpio.o: cc stm/gpio.c
+build obj/interrupt.o: cc stm/interrupt.c
+build obj/led.o: cc stm/led.c
+build obj/rcc.o: cc stm/rcc.c
+build obj/system_stm32f4xx.o: cc stm/system_stm32f4xx.c
+build obj/stm.a: ar obj/fault.o obj/gpio.o obj/interrupt.o obj/led.o obj/rcc.o obj/system_stm32f4xx.o
+
+# USB library
+build obj/usb_cdc.o: cc stm/usb_cdc.c
+build obj/usb_bsp.o: cc stm/usb/usb_bsp.c
+build obj/usb_core.o: cc stm/usb/usb_core.c
+build obj/usb_dcd.o: cc stm/usb/usb_dcd.c
+build obj/usb_dcd_int.o: cc stm/usb/usb_dcd_int.c
+build obj/usbd_cdc_core.o: cc stm/usb/usbd_cdc_core.c
+build obj/usbd_cdc_vcp.o: cc stm/usb/usbd_cdc_vcp.c
+build obj/usbd_core.o: cc stm/usb/usbd_core.c
+build obj/usbd_desc.o: cc stm/usb/usbd_desc.c
+build obj/usbd_ioreq.o: cc stm/usb/usbd_ioreq.c
+build obj/usbd_req.o: cc stm/usb/usbd_req.c
+build obj/usbd_usr.o: cc stm/usb/usbd_usr.c
+build obj/usb.a: ar obj/usb_cdc.o obj/usb_bsp.o obj/usb_core.o obj/usb_dcd.o obj/usb_dcd_int.o obj/usbd_cdc_core.o obj/usbd_cdc_vcp.o obj/usbd_core.o obj/usbd_desc.o obj/usbd_ioreq.o obj/usbd_req.o obj/usbd_usr.o
+
+# The application
+build obj/main.o: cc main.c
+
+build obj/md380.elf: ld obj/main.o obj/freertos.a obj/usb.a obj/stm.a 
+build obj/md380.img: objcopy obj/md380.elf
+default obj/md380.img

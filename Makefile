@@ -1,64 +1,14 @@
 PROJECT=md380
 
 .PHONY:: all clean
-all::
+all:: freertos/.git/HEAD md380.img
 
-#CROSS=arm-linux-gnueabihf
-CROSS=arm-none-eabi
-#RTOS_ARCH=ARM_CM4_MPU
-RTOS_ARCH=ARM_CM4F
-CC=$(CROSS)-gcc
-AR=$(CROSS)-ar
-OBJCOPY=$(CROSS)-objcopy
-OBJDUMP=$(CROSS)-objdump
-ARCH=$(CROSS)-ar
-WARNINGS=-Wall -Wextra
-LDSCRIPT=md380.ld
-CFLAGS= $(WARNINGS) \
-	-std=c99 \
-	-D $(RTOS_ARCH) \
-	$(INCLUDES) $(BASEINCLUDE) \
-	-mcpu=cortex-m4 -mthumb \
-	-mfpu=fpv4-sp-d16 -mfloat-abi=hard \
-	-T$(LDSCRIPT) \
-	-g -O3 -fomit-frame-pointer
-INCLUDES += -I.
-INCLUDES += -Istm
-INCLUDES += -Ifreertos/FreeRTOS/Source/include
-INCLUDES += -Ifreertos/FreeRTOS/Source/portable/GCC/$(RTOS_ARCH)
-LINKER_FLAGS=-Xlinker -o$(PROJECT).elf
-#LINKER_FLAGS+-Xlinker -M
-#LINKER_FLAGS+=-Xlinker -Map=$(PROJECT).map
-BASEINCLUDE=-I. -I/FreeRTOS/include -I/FreeRTOS/portable/GCC/$(RTOS_ARCH)
+md380.img: freertos/.git/HEAD
+	ninja
 
-vpath %.c stm
-vpath %.c freertos/FreeRTOS/Source
-vpath %.c freertos/FreeRTOS/Source/portable/MemMang
-vpath %.c freertos/FreeRTOS/Source/portable/GCC/$(RTOS_ARCH)
-
-# Our code:
-SRC_FILES += main.c rcc.c gpio.c fault.c led.c
-# STM code:
-SRC_FILES += system_stm32f4xx.c
-# RTOS code:
-SRC_FILES += list.c queue.c tasks.c heap_2.c port.c
-
-ARM_OBJ = $(SRC_FILES:.c=.o)
-
-$(ARM_OBJ) : %.o : %.c Makefile
-	$(CC) -c $(CFLAGS) $< -o $@
 clean::
-	rm -f $(ARM_OBJ)
+	ninja -t clean
 
-
-all:: $(PROJECT).elf
-$(PROJECT).elf: Makefile $(ARM_OBJ) $(LDSCRIPT)
-	$(CC) $(CFLAGS) $(ARM_OBJ) -nostartfiles $(LINKER_FLAGS)
-
-$(PROJECT).lst: $(PROJECT).elf
-	$(OBJDUMP) -d -S $(PROJECT).elf >$(PROJECT).lst
-clean::
-	rm -f $(PROJECT).elf $(PROJECT).map
 
 
 
