@@ -13,6 +13,39 @@ clean::
 
 
 
+#############################################################################
+#
+#  Documentation
+#
+#############################################################################
+.PHONY:: doc
+doc:: doc/stm32f405.pdf
+doc/stm32f405.pdf:
+	mkdir -p doc
+	wget -O $@ -c http://www.st.com/resource/en/datasheet/stm32f405rg.pdf
+doc:: doc/stm32f405_Reference_Manual.pdf
+doc/stm32f405_Reference_Manual.pdf:
+	mkdir -p doc
+	wget -O $@ -c http://www.st.com/resource/en/reference_manual/dm00031020.pdf
+doc:: doc/stm32f405_Programming_Manual.pdf
+doc/stm32f405_Programming_Manual.pdf:
+	mkdir -p doc
+	wget -O $@ -c http://www.st.com/resource/en/programming_manual/dm00046982.pdf
+doc:: doc/STM32Cube_UM1725_HAL_LL_Driver_description.pdf
+doc/STM32Cube_UM1725_HAL_LL_Driver_description.pdf:
+	mkdir -p doc
+	wget -O $@ -c http://www.st.com/resource/en/user_manual/dm00105879.pdf
+doc:: doc/STM32Cube_UM1734_USB_Device_Library.pdf
+doc/STM32Cube_UM1734_USB_Device_Library.pdf:
+	mkdir -p doc
+	wget -O $@ -c http://www.st.com/resource/en/user_manual/dm00108129.pdf
+
+
+#############################################################################
+#
+#  Freertos
+#
+#############################################################################
 
 # Woah, the GIT mirror has much faster download times than
 # sourceforge's file download. Let's use it:
