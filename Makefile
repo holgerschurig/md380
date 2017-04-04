@@ -17,16 +17,16 @@ clean::
 #
 #############################################################################
 .PHONY:: doc
-doc:: doc/stm32f405.pdf
-doc/stm32f405.pdf:
+doc:: doc/STM32F405.pdf
+doc/STM32F405.pdf:
 	mkdir -p doc
-	wget -O $@ -c http://www.st.com/resource/en/datasheet/stm32f405rg.pdf
-doc:: doc/stm32f405_Reference_Manual.pdf
-doc/stm32f405_Reference_Manual.pdf:
+	wget -O $@ -c http://www.st.com/resource/en/datasheet/STM32F405rg.pdf
+doc:: doc/STM32F405_Reference_Manual.pdf
+doc/STM32F405_Reference_Manual.pdf:
 	mkdir -p doc
 	wget -O $@ -c http://www.st.com/resource/en/reference_manual/dm00031020.pdf
-doc:: doc/stm32f405_Programming_Manual.pdf
-doc/stm32f405_Programming_Manual.pdf:
+doc:: doc/STM32F405_Programming_Manual.pdf
+doc/STM32F405_Programming_Manual.pdf:
 	mkdir -p doc
 	wget -O $@ -c http://www.st.com/resource/en/programming_manual/dm00046982.pdf
 doc:: doc/STM32Cube_UM1725_HAL_LL_Driver_description.pdf
@@ -37,6 +37,25 @@ doc:: doc/STM32Cube_UM1734_USB_Device_Library.pdf
 doc/STM32Cube_UM1734_USB_Device_Library.pdf:
 	mkdir -p doc
 	wget -O $@ -c http://www.st.com/resource/en/user_manual/dm00108129.pdf
+doc:: doc/MD380_Schematics.pdf
+doc/MD380_Schematics.pdf:
+	mkdir -p doc
+	wget -O $@ -c http://www.pc5e.nl/downloads/md380/documents/MD-380UHF-RF-schematic.pdf
+doc:: doc/SKY72310_Frequency_Synthesizer.pdf
+doc/SKY72310_Frequency_Synthesizer.pdf:
+	mkdir -p doc
+	wget -O $@ -c http://www.skyworksinc.com/uploads/documents/200705E.pdf
+doc:: doc/GT3136_Detector.pdf
+doc/GT3136_Detector.pdf:
+	mkdir -p doc
+	wget -O $@ -c "http://www.devicemart.co.kr/include/down.php?file=/data/goods/goodsfile/1074873_file_0.pdf&mode=goods&name=GT3136%20Rev.pdf"
+doc:: doc/XC6204_PMIC.pdf
+doc/XC6204_PMIC.pdf:
+	mkdir -p doc
+	wget -O $@ -c https://www.torexsemi.com/file/xc6204/XC6204-XC6205.pdf
+doc:: doc/ILI9481_LCD_Display.pdf
+doc/ILI9481_LCD_Display.pdf:
+	wget -O $@ -c http://www.ncsys.co.jp/webshop/GTV350MPZI04\(ILI9481\).pdf
 
 
 #############################################################################

@@ -4,6 +4,11 @@
 /.ninja_log
 /.ninja_deps
 /obj
-/STM32Cube_FW_*
-/doc/STM32Cube_*.pdf
-/doc/stm32f405*.pdf
+/STM32Cube*
+/doc/GT3136*.pdf
+/doc/ILI9481*.pdf
+/doc/MD380*.pdf
+/doc/SKY72310*.pdf
+/doc/STM32Cube*.pdf
+/doc/XC6204*.pdf
+/doc/STM32F405*.pdf
