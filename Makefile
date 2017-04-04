@@ -1,9 +1,7 @@
 PROJECT=md380
 
 .PHONY:: all clean
-all:: freertos/.git/HEAD md380.img
-
-md380.img: freertos/.git/HEAD
+all obj/md380.bin:: freertos/.git/HEAD
 	@ninja | cat
 
 clean::
