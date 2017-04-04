@@ -1,11 +1,12 @@
+# @compile: make clean all
 cross = arm-none-eabi
 rtos_arch = ARM_CM4F
 cc = ${cross}-gcc
 ld = ${cross}-ld
 ar = ${cross}-ar
 objcopy = ${cross}-objcopy
-c_std = -std=c99
 c_defines = -D${rtos_arch}
+c_std = -std=c11 -Wall -Wextra
 c_cpu = -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 c_opt = -O3 -fomit-frame-pointer
 cflags = $c_std $c_defines $c_cpu $c_opt

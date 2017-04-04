@@ -1,4 +1,3 @@
-
 #include <stdint.h>
 #include <string.h>
 #include "FreeRTOS.h"
@@ -57,7 +56,9 @@ static void input_setup(struct pin *pin) {
 	pin_set_pupd(pin, PIN_PUPD_NONE);
 }
 
-static void output_main(void* machtnichts) {
+static void output_main(void* machtnichts)
+{
+	(void) machtnichts;
 
 	led_setup();
 	usb_cdc_init();
@@ -73,7 +74,9 @@ static void output_main(void* machtnichts) {
 	}
 }
 
-static void red_main(void* machtnichts) {
+static void red_main(void* machtnichts)
+{
+	(void) machtnichts;
 
 	for(;;){
 		set_red_state(0);

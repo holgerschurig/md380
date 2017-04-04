@@ -48,6 +48,8 @@
  */
 void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *usb_dev)
 {
+  (void) usb_dev;
+
   pin_enable(USB_VBUS_PIN);
   pin_set_mode(USB_VBUS_PIN, PIN_MODE_INPUT);
   pin_set_pupd(USB_VBUS_PIN, PIN_PUPD_NONE);
@@ -80,6 +82,8 @@ void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *usb_dev)
  */
 void USB_OTG_BSP_EnableInterrupt(USB_OTG_CORE_HANDLE *pdev)
 {
+  (void) pdev;
+
   interrupt_enable(OTG_FS_IRQn);
 }
 

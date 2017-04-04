@@ -800,6 +800,7 @@ void USBD_ParseSetupRequest( USB_OTG_CORE_HANDLE  *pdev,
 void USBD_CtlError( USB_OTG_CORE_HANDLE  *pdev,
                             USB_SETUP_REQ *req)
 {
+  (void) req;
 
   DCD_EP_Stall(pdev , 0x80);
   DCD_EP_Stall(pdev , 0);

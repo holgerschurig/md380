@@ -109,6 +109,8 @@ static uint16_t VCP_DeInit(void)
   */
 static uint16_t VCP_Ctrl (uint32_t Cmd, uint8_t* Buf, uint32_t Len)
 {
+  (void) Len;
+
   switch (Cmd)
   {
   case SEND_ENCAPSULATED_COMMAND:
@@ -221,7 +223,7 @@ void VCP_Init(void)
 
 int32_t VCP_Read(uint8_t *buf, uint32_t len, portTickType timeout)
 {
-  int32_t i;
+  uint32_t i;
 
   for (i = 0; i < len; ++i, ++buf) {
     if (!xQueueReceive(g_rx_queue, buf, timeout))
