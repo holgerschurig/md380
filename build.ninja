@@ -4,11 +4,11 @@ cc = ${cross}-gcc
 ld = ${cross}-ld
 ar = ${cross}-ar
 objcopy = ${cross}-objcopy
-c_def = -DARM_CM4F
 c_std = -std=c99
+c_defines = -D${rtos_arch}
 c_cpu = -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 c_opt = -O3 -fomit-frame-pointer
-cflags = $c_std $c_def $c_cpu $c_opt
+cflags = $c_std $c_defines $c_cpu $c_opt
 includes = -I. -Istm -Ifreertos/FreeRTOS/Source/include -Ifreertos/FreeRTOS/Source/portable/GCC/${rtos_arch}
 
 rule cc
