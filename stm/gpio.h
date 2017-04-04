@@ -103,10 +103,10 @@ struct pin;
 void pin_enable(struct pin *pin);
 
 enum pin_mode {
-    PIN_MODE_INPUT  = 0x00,
-    PIN_MODE_OUTPUT = 0x01,
-    PIN_MODE_AF     = 0x02,
-    PIN_MODE_ANALOG = 0x03
+	PIN_MODE_INPUT  = 0x00,
+	PIN_MODE_OUTPUT = 0x01,
+	PIN_MODE_AF     = 0x02,
+	PIN_MODE_ANALOG = 0x03
 };
 
 /**
@@ -118,8 +118,8 @@ enum pin_mode {
 void pin_set_mode(struct pin *pin, enum pin_mode mode);
 
 enum pin_type {
-    PIN_TYPE_PUSHPULL  = 0x0,
-    PIN_TYPE_OPENDRAIN = 0x1
+	PIN_TYPE_PUSHPULL  = 0x0,
+	PIN_TYPE_OPENDRAIN = 0x1
 };
 
 /**
@@ -128,10 +128,10 @@ enum pin_type {
 void pin_set_otype(struct pin *pin, enum pin_type type);
 
 enum pin_speed {
-    PIN_SPEED_2MHZ   = 0x00,
-    PIN_SPEED_25MHZ  = 0x01,
-    PIN_SPEED_50MHZ  = 0x02,
-    PIN_SPEED_100MHZ = 0x03
+	PIN_SPEED_2MHZ   = 0x00,
+	PIN_SPEED_25MHZ  = 0x01,
+	PIN_SPEED_50MHZ  = 0x02,
+	PIN_SPEED_100MHZ = 0x03
 };
 
 /**
@@ -140,9 +140,9 @@ enum pin_speed {
 void pin_set_ospeed(struct pin *pin, enum pin_speed speed);
 
 enum pin_pupd {
-    PIN_PUPD_NONE = 0x00,
-    PIN_PUPD_UP   = 0x01,
-    PIN_PUPD_DOWN = 0x02
+	PIN_PUPD_NONE = 0x00,
+	PIN_PUPD_UP   = 0x01,
+	PIN_PUPD_DOWN = 0x02
 };
 
 /**
@@ -151,22 +151,22 @@ enum pin_pupd {
 void pin_set_pupd(struct pin *pin, enum pin_pupd pupd);
 
 enum pin_af {
-    PIN_AF0  = 0x0,
-    PIN_AF1  = 0x1,
-    PIN_AF2  = 0x2,
-    PIN_AF3  = 0x3,
-    PIN_AF4  = 0x4,
-    PIN_AF5  = 0x5,
-    PIN_AF6  = 0x6,
-    PIN_AF7  = 0x7,
-    PIN_AF8  = 0x8,
-    PIN_AF9  = 0x9,
-    PIN_AF10 = 0xa,
-    PIN_AF11 = 0xb,
-    PIN_AF12 = 0xc,
-    PIN_AF13 = 0xd,
-    PIN_AF14 = 0xe,
-    PIN_AF15 = 0xf
+	PIN_AF0  = 0x0,
+	PIN_AF1  = 0x1,
+	PIN_AF2  = 0x2,
+	PIN_AF3  = 0x3,
+	PIN_AF4  = 0x4,
+	PIN_AF5  = 0x5,
+	PIN_AF6  = 0x6,
+	PIN_AF7  = 0x7,
+	PIN_AF8  = 0x8,
+	PIN_AF9  = 0x9,
+	PIN_AF10 = 0xa,
+	PIN_AF11 = 0xb,
+	PIN_AF12 = 0xc,
+	PIN_AF13 = 0xd,
+	PIN_AF14 = 0xe,
+	PIN_AF15 = 0xf
 };
 
 #define PIN_AF_RTC_50HZ         PIN_AF0

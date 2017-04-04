@@ -13,7 +13,8 @@ static void output_main(void*);
 static void red_main(void*);
 static SemaphoreHandle_t red_monitor;
 
-int main (void) {
+int main (void)
+{
 	red_monitor = xSemaphoreCreateMutex();
 	xTaskCreate(output_main, "out", 256, NULL, 1, NULL);
 	xTaskCreate(red_main, "red", 256, NULL, 0, NULL);
@@ -22,12 +23,14 @@ int main (void) {
 }
 
 static int  red_state;
-static void set_red_state(int i) {
+static void set_red_state(int i)
+{
 	xSemaphoreTake(red_monitor, portMAX_DELAY);
 	red_state = i;
 	xSemaphoreGive(red_monitor);
 }
-static int  get_red_state() {
+static int  get_red_state()
+{
 	int i;
 	xSemaphoreTake(red_monitor, portMAX_DELAY);
 	i = red_state;
@@ -36,7 +39,8 @@ static int  get_red_state() {
 }
 
 
-static void led_set(int red, int green) {
+static void led_set(int red, int green)
+{
 	red_led(red);
 	green_led(green);
 
@@ -44,13 +48,14 @@ static void led_set(int red, int green) {
 	const char red_off[] = "red off, ";
 	const char green_on[] = "green on\n";
 	const char green_off[] = "green off\n";
-	#define SEND_STR(s) usb_cdc_write((void*)(s), strlen(s))
+#define SEND_STR(s) usb_cdc_write((void*)(s), strlen(s))
 	SEND_STR(red?red_on:red_off);
 	SEND_STR(green?green_on:green_off);
-	#undef SEND_STR
+#undef SEND_STR
 }
 
-static void input_setup(struct pin *pin) {
+static void input_setup(struct pin *pin)
+{
 	pin_enable(pin);
 	pin_set_mode(pin, PIN_MODE_INPUT);
 	pin_set_pupd(pin, PIN_PUPD_NONE);
@@ -78,7 +83,7 @@ static void red_main(void* machtnichts)
 {
 	(void) machtnichts;
 
-	for(;;){
+	for(;;) {
 		set_red_state(0);
 		sleep(500);
 		set_red_state(1);
@@ -86,7 +91,8 @@ static void red_main(void* machtnichts)
 	}
 }
 
-static void sleep(uint32_t ms) {
+static void sleep(uint32_t ms)
+{
 	vTaskDelay(ms);
 }
 

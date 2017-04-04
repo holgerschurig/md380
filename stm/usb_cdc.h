@@ -49,7 +49,7 @@ ssize_t usb_cdc_read_timeout(void *buf, size_t len, uint32_t timeout);
  */
 static inline ssize_t usb_cdc_read(void *buf, size_t len)
 {
-  return usb_cdc_read_timeout(buf, len, portMAX_DELAY);
+	return usb_cdc_read_timeout(buf, len, portMAX_DELAY);
 }
 
 #ifdef __cplusplus

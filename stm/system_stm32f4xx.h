@@ -40,7 +40,7 @@
 #define __SYSTEM_STM32F4XX_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /** @addtogroup STM32F4xx_System_Includes

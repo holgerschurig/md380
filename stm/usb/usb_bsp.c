@@ -48,30 +48,30 @@
  */
 void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *usb_dev)
 {
-  (void) usb_dev;
+	(void) usb_dev;
 
-  pin_enable(USB_VBUS_PIN);
-  pin_set_mode(USB_VBUS_PIN, PIN_MODE_INPUT);
-  pin_set_pupd(USB_VBUS_PIN, PIN_PUPD_NONE);
+	pin_enable(USB_VBUS_PIN);
+	pin_set_mode(USB_VBUS_PIN, PIN_MODE_INPUT);
+	pin_set_pupd(USB_VBUS_PIN, PIN_PUPD_NONE);
 
-  pin_enable(USB_DM_PIN);
-  pin_set_af(USB_DM_PIN, PIN_AF_OTG_FS);
-  pin_set_ospeed(USB_DM_PIN, PIN_SPEED_100MHZ);
-  pin_set_otype(USB_DM_PIN, PIN_TYPE_PUSHPULL);
-  pin_set_pupd(USB_DM_PIN, PIN_PUPD_NONE);
-  pin_set_mode(USB_DM_PIN, PIN_MODE_AF);
+	pin_enable(USB_DM_PIN);
+	pin_set_af(USB_DM_PIN, PIN_AF_OTG_FS);
+	pin_set_ospeed(USB_DM_PIN, PIN_SPEED_100MHZ);
+	pin_set_otype(USB_DM_PIN, PIN_TYPE_PUSHPULL);
+	pin_set_pupd(USB_DM_PIN, PIN_PUPD_NONE);
+	pin_set_mode(USB_DM_PIN, PIN_MODE_AF);
 
-  pin_enable(USB_DP_PIN);
-  pin_set_af(USB_DP_PIN, PIN_AF_OTG_FS);
-  pin_set_ospeed(USB_DP_PIN, PIN_SPEED_100MHZ);
-  pin_set_otype(USB_DP_PIN, PIN_TYPE_PUSHPULL);
-  pin_set_pupd(USB_DP_PIN, PIN_PUPD_NONE);
-  pin_set_mode(USB_DP_PIN, PIN_MODE_AF);
+	pin_enable(USB_DP_PIN);
+	pin_set_af(USB_DP_PIN, PIN_AF_OTG_FS);
+	pin_set_ospeed(USB_DP_PIN, PIN_SPEED_100MHZ);
+	pin_set_otype(USB_DP_PIN, PIN_TYPE_PUSHPULL);
+	pin_set_pupd(USB_DP_PIN, PIN_PUPD_NONE);
+	pin_set_mode(USB_DP_PIN, PIN_MODE_AF);
 
-  rcc_enable(RCCDEV_SYSCFG);
-  rcc_enable(RCCDEV_OTGFS);
+	rcc_enable(RCCDEV_SYSCFG);
+	rcc_enable(RCCDEV_OTGFS);
 
-  interrupt_set_priority(OTG_FS_IRQn, INTERRUPT_PRIORITY_FREERTOS_SAFE);
+	interrupt_set_priority(OTG_FS_IRQn, INTERRUPT_PRIORITY_FREERTOS_SAFE);
 }
 
 /**
@@ -82,9 +82,9 @@ void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *usb_dev)
  */
 void USB_OTG_BSP_EnableInterrupt(USB_OTG_CORE_HANDLE *pdev)
 {
-  (void) pdev;
+	(void) pdev;
 
-  interrupt_enable(OTG_FS_IRQn);
+	interrupt_enable(OTG_FS_IRQn);
 }
 
 /**

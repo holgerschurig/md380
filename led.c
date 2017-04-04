@@ -1,7 +1,8 @@
 #include "led.h"
 #include "gpio.h"
 
-static void led_pin_setup(struct pin *pin) {
+static void led_pin_setup(struct pin *pin)
+{
 	pin_enable(pin);
 	pin_set_mode(pin, PIN_MODE_OUTPUT);
 	pin_set_otype(pin, PIN_TYPE_PUSHPULL);
@@ -10,12 +11,14 @@ static void led_pin_setup(struct pin *pin) {
 	pin_reset(pin);
 }
 
-void led_setup(void) {
+void led_setup(void)
+{
 	led_pin_setup(pin_e0);
 	led_pin_setup(pin_e1);
 }
 
-void green_led(int on) {
+void green_led(int on)
+{
 	if (on) {
 		pin_set(pin_e0);
 	} else {
@@ -23,7 +26,8 @@ void green_led(int on) {
 	}
 }
 
-void red_led(int on) {
+void red_led(int on)
+{
 	if (on) {
 		pin_set(pin_e1);
 	} else {

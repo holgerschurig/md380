@@ -31,7 +31,7 @@ __ALIGN_BEGIN USB_OTG_CORE_HANDLE g_usb_dev __ALIGN_END;
 /** Interrupt handler for the USB stack. */
 void OTG_FS_IRQHandler(void)
 {
-  USBD_OTG_ISR_Handler(&g_usb_dev);
+	USBD_OTG_ISR_Handler(&g_usb_dev);
 }
 
 /*
@@ -40,17 +40,17 @@ void OTG_FS_IRQHandler(void)
 
 void usb_cdc_init(void)
 {
-  VCP_Init();
-  USBD_Init(&g_usb_dev, USB_OTG_FS_CORE_ID, &USR_desc,
-            &USBD_CDC_cb, &USR_cb);
+	VCP_Init();
+	USBD_Init(&g_usb_dev, USB_OTG_FS_CORE_ID, &USR_desc,
+	          &USBD_CDC_cb, &USR_cb);
 }
 
 ssize_t usb_cdc_write(const void *buf, size_t len)
 {
-  return VCP_Write((uint8_t *)buf, len);
+	return VCP_Write((uint8_t *)buf, len);
 }
 
 ssize_t usb_cdc_read_timeout(void *buf, size_t len, uint32_t timeout)
 {
-  return VCP_Read((uint8_t *)buf, len, timeout);
+	return VCP_Read((uint8_t *)buf, len, timeout);
 }

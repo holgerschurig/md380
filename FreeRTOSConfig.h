@@ -15,8 +15,8 @@
 
 /* Ensure stdint is only used by the compiler, and not the assembler. */
 #ifdef __ICCARM__
-	#include <stdint.h>
-	extern uint32_t SystemCoreClock;
+#include <stdint.h>
+extern uint32_t SystemCoreClock;
 #endif
 
 #define configUSE_PREEMPTION			1
@@ -62,10 +62,10 @@ to exclude the API function. */
 
 /* Cortex-M specific definitions. */
 #ifdef __NVIC_PRIO_BITS
-	/* __BVIC_PRIO_BITS will be specified when CMSIS is being used. */
-	#define configPRIO_BITS       		__NVIC_PRIO_BITS
+/* __BVIC_PRIO_BITS will be specified when CMSIS is being used. */
+#define configPRIO_BITS       		__NVIC_PRIO_BITS
 #else
-	#define configPRIO_BITS       		4        /* 15 priority levels */
+#define configPRIO_BITS       		4        /* 15 priority levels */
 #endif
 
 /* The lowest interrupt priority that can be used in a call to a "set priority"
@@ -84,11 +84,11 @@ to all Cortex-M ports, and do not rely on any particular library functions. */
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
 See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
-	
+
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */
-#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }	
-	
+#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
+
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
 standard names. */
 #define vPortSVCHandler SVC_Handler

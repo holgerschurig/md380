@@ -39,10 +39,10 @@
 /* Private variables ---------------------------------------------------------*/
 
 static LINE_CODING linecoding = {
-  115200, /* baud rate*/
-  0x00,   /* stop bits-1*/
-  0x00,   /* parity - none*/
-  0x08    /* nb. of bits 8*/
+	115200, /* baud rate*/
+	0x00,   /* stop bits-1*/
+	0x00,   /* parity - none*/
+	0x08    /* nb. of bits 8*/
 };
 
 /* These are external variables imported from CDC core to be used for IN
@@ -66,13 +66,12 @@ static uint16_t VCP_DeInit     (void);
 static uint16_t VCP_Ctrl       (uint32_t Cmd, uint8_t* Buf, uint32_t Len);
 static uint16_t VCP_DataRx     (uint8_t* Buf, uint32_t Len);
 
-CDC_IF_Prop_TypeDef VCP_fops =
-{
-  VCP_DriverInit,
-  VCP_DeInit,
-  VCP_Ctrl,
-  VCP_Write,
-  VCP_DataRx
+CDC_IF_Prop_TypeDef VCP_fops = {
+	VCP_DriverInit,
+	VCP_DeInit,
+	VCP_Ctrl,
+	VCP_Write,
+	VCP_DataRx
 };
 
 /* Private functions ---------------------------------------------------------*/
@@ -84,7 +83,7 @@ CDC_IF_Prop_TypeDef VCP_fops =
   */
 static uint16_t VCP_DriverInit(void)
 {
-  return USBD_OK;
+	return USBD_OK;
 }
 
 /**
@@ -95,7 +94,7 @@ static uint16_t VCP_DriverInit(void)
   */
 static uint16_t VCP_DeInit(void)
 {
-  return USBD_OK;
+	return USBD_OK;
 }
 
 
@@ -109,62 +108,61 @@ static uint16_t VCP_DeInit(void)
   */
 static uint16_t VCP_Ctrl (uint32_t Cmd, uint8_t* Buf, uint32_t Len)
 {
-  (void) Len;
+	(void) Len;
 
-  switch (Cmd)
-  {
-  case SEND_ENCAPSULATED_COMMAND:
-    /* Not  needed for this driver */
-    break;
+	switch (Cmd) {
+	case SEND_ENCAPSULATED_COMMAND:
+		/* Not  needed for this driver */
+		break;
 
-  case GET_ENCAPSULATED_RESPONSE:
-    /* Not  needed for this driver */
-    break;
+	case GET_ENCAPSULATED_RESPONSE:
+		/* Not  needed for this driver */
+		break;
 
-  case SET_COMM_FEATURE:
-    /* Not  needed for this driver */
-    break;
+	case SET_COMM_FEATURE:
+		/* Not  needed for this driver */
+		break;
 
-  case GET_COMM_FEATURE:
-    /* Not  needed for this driver */
-    break;
+	case GET_COMM_FEATURE:
+		/* Not  needed for this driver */
+		break;
 
-  case CLEAR_COMM_FEATURE:
-    /* Not  needed for this driver */
-    break;
+	case CLEAR_COMM_FEATURE:
+		/* Not  needed for this driver */
+		break;
 
-  case SET_LINE_CODING:
-    linecoding.bitrate = (uint32_t)(Buf[0] | (Buf[1] << 8) | (Buf[2] << 16) | (Buf[3] << 24));
-    linecoding.format = Buf[4];
-    linecoding.paritytype = Buf[5];
-    linecoding.datatype = Buf[6];
-    /* Set the new configuration */
-    // VCP_COMConfig(OTHER_CONFIG);
-    break;
+	case SET_LINE_CODING:
+		linecoding.bitrate = (uint32_t)(Buf[0] | (Buf[1] << 8) | (Buf[2] << 16) | (Buf[3] << 24));
+		linecoding.format = Buf[4];
+		linecoding.paritytype = Buf[5];
+		linecoding.datatype = Buf[6];
+		/* Set the new configuration */
+		// VCP_COMConfig(OTHER_CONFIG);
+		break;
 
-  case GET_LINE_CODING:
-    Buf[0] = (uint8_t)(linecoding.bitrate);
-    Buf[1] = (uint8_t)(linecoding.bitrate >> 8);
-    Buf[2] = (uint8_t)(linecoding.bitrate >> 16);
-    Buf[3] = (uint8_t)(linecoding.bitrate >> 24);
-    Buf[4] = linecoding.format;
-    Buf[5] = linecoding.paritytype;
-    Buf[6] = linecoding.datatype;
-    break;
+	case GET_LINE_CODING:
+		Buf[0] = (uint8_t)(linecoding.bitrate);
+		Buf[1] = (uint8_t)(linecoding.bitrate >> 8);
+		Buf[2] = (uint8_t)(linecoding.bitrate >> 16);
+		Buf[3] = (uint8_t)(linecoding.bitrate >> 24);
+		Buf[4] = linecoding.format;
+		Buf[5] = linecoding.paritytype;
+		Buf[6] = linecoding.datatype;
+		break;
 
-  case SET_CONTROL_LINE_STATE:
-    /* Not  needed for this driver */
-    break;
+	case SET_CONTROL_LINE_STATE:
+		/* Not  needed for this driver */
+		break;
 
-  case SEND_BREAK:
-    /* Not  needed for this driver */
-    break;
+	case SEND_BREAK:
+		/* Not  needed for this driver */
+		break;
 
-  default:
-    break;
-  }
+	default:
+		break;
+	}
 
-  return USBD_OK;
+	return USBD_OK;
 }
 
 /**
@@ -177,15 +175,15 @@ static uint16_t VCP_Ctrl (uint32_t Cmd, uint8_t* Buf, uint32_t Len)
   */
 uint16_t VCP_Write (uint8_t* buf, uint32_t len)
 {
-  /* XXX what happens if len > APP_RX_DATA_SIZE? */
-  for (uint32_t i = 0; i < len; ++i) {
-    APP_Rx_Buffer[APP_Rx_ptr_in++] = buf[i];
+	/* XXX what happens if len > APP_RX_DATA_SIZE? */
+	for (uint32_t i = 0; i < len; ++i) {
+		APP_Rx_Buffer[APP_Rx_ptr_in++] = buf[i];
 
-    if (APP_Rx_ptr_in == APP_RX_DATA_SIZE)
-      APP_Rx_ptr_in = 0;
-  }
+		if (APP_Rx_ptr_in == APP_RX_DATA_SIZE)
+			APP_Rx_ptr_in = 0;
+	}
 
-  return USBD_OK;
+	return USBD_OK;
 }
 
 /**
@@ -205,32 +203,32 @@ uint16_t VCP_Write (uint8_t* buf, uint32_t len)
   */
 static uint16_t VCP_DataRx (uint8_t* buf, uint32_t len)
 {
-  portBASE_TYPE should_yield = pdFALSE;
+	portBASE_TYPE should_yield = pdFALSE;
 
-  for (uint32_t i = 0; i < len; ++i) {
-    if (!xQueueSendFromISR(g_rx_queue, &buf[i], &should_yield))
-      break;
-  }
+	for (uint32_t i = 0; i < len; ++i) {
+		if (!xQueueSendFromISR(g_rx_queue, &buf[i], &should_yield))
+			break;
+	}
 
-  portEND_SWITCHING_ISR(should_yield);
-  return USBD_OK;
+	portEND_SWITCHING_ISR(should_yield);
+	return USBD_OK;
 }
 
 void VCP_Init(void)
 {
-  g_rx_queue = xQueueCreate(RX_QUEUE_LEN, 1);
+	g_rx_queue = xQueueCreate(RX_QUEUE_LEN, 1);
 }
 
 int32_t VCP_Read(uint8_t *buf, uint32_t len, portTickType timeout)
 {
-  uint32_t i;
+	uint32_t i;
 
-  for (i = 0; i < len; ++i, ++buf) {
-    if (!xQueueReceive(g_rx_queue, buf, timeout))
-      break;
-  }
+	for (i = 0; i < len; ++i, ++buf) {
+		if (!xQueueReceive(g_rx_queue, buf, timeout))
+			break;
+	}
 
-  return i;
+	return i;
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

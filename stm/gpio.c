@@ -17,69 +17,84 @@
 /* External GPIO Interface ****************************************************/
 
 struct gpio {
-    GPIO_TypeDef *dev;
-    enum RCCDevice rcc_dev;
+	GPIO_TypeDef *dev;
+	enum RCCDevice rcc_dev;
 };
 
 
-void gpio_enable(struct gpio *gpio) {
-    rcc_enable(gpio->rcc_dev);
+void gpio_enable(struct gpio *gpio)
+{
+	rcc_enable(gpio->rcc_dev);
 }
 
-void gpio_reset_moder(struct gpio *gpio, uint32_t val) {
-    gpio->dev->MODER &= ~val;
+void gpio_reset_moder(struct gpio *gpio, uint32_t val)
+{
+	gpio->dev->MODER &= ~val;
 }
 
-void gpio_update_moder(struct gpio *gpio, uint32_t val) {
-    gpio->dev->MODER |= val;
+void gpio_update_moder(struct gpio *gpio, uint32_t val)
+{
+	gpio->dev->MODER |= val;
 }
 
-void gpio_reset_otyper(struct gpio *gpio, uint32_t val) {
-    gpio->dev->OTYPER &= ~val;
+void gpio_reset_otyper(struct gpio *gpio, uint32_t val)
+{
+	gpio->dev->OTYPER &= ~val;
 }
 
-void gpio_update_otyper(struct gpio *gpio, uint32_t val) {
-    gpio->dev->OTYPER |= val;
+void gpio_update_otyper(struct gpio *gpio, uint32_t val)
+{
+	gpio->dev->OTYPER |= val;
 }
 
-void gpio_reset_ospeedr(struct gpio *gpio, uint32_t val) {
-    gpio->dev->OSPEEDR &= ~val;
+void gpio_reset_ospeedr(struct gpio *gpio, uint32_t val)
+{
+	gpio->dev->OSPEEDR &= ~val;
 }
 
-void gpio_update_ospeedr(struct gpio *gpio, uint32_t val) {
-    gpio->dev->OSPEEDR |= val;
+void gpio_update_ospeedr(struct gpio *gpio, uint32_t val)
+{
+	gpio->dev->OSPEEDR |= val;
 }
 
-void gpio_reset_pupdr(struct gpio *gpio, uint32_t val) {
-    gpio->dev->PUPDR &= ~val;
+void gpio_reset_pupdr(struct gpio *gpio, uint32_t val)
+{
+	gpio->dev->PUPDR &= ~val;
 }
 
-void gpio_update_pupdr(struct gpio *gpio, uint32_t val) {
-    gpio->dev->PUPDR |= val;
+void gpio_update_pupdr(struct gpio *gpio, uint32_t val)
+{
+	gpio->dev->PUPDR |= val;
 }
 
-uint32_t gpio_get_idr(struct gpio *gpio) {
-    return gpio->dev->IDR;
+uint32_t gpio_get_idr(struct gpio *gpio)
+{
+	return gpio->dev->IDR;
 }
 
-void gpio_modify_odr(struct gpio *gpio, uint32_t val) {
-    gpio->dev->ODR |= val;
+void gpio_modify_odr(struct gpio *gpio, uint32_t val)
+{
+	gpio->dev->ODR |= val;
 }
 
-void gpio_reset_afr(struct gpio *gpio, int lh, uint32_t val) {
-    gpio->dev->AFR[lh] &= ~val;
+void gpio_reset_afr(struct gpio *gpio, int lh, uint32_t val)
+{
+	gpio->dev->AFR[lh] &= ~val;
 }
 
-void gpio_modify_afr(struct gpio *gpio, int lh, uint32_t val) {
-    gpio->dev->AFR[lh] |= val;
+void gpio_modify_afr(struct gpio *gpio, int lh, uint32_t val)
+{
+	gpio->dev->AFR[lh] |= val;
 }
 
-void gpio_set_bsrrl(struct gpio *gpio, uint32_t val) {
-    gpio->dev->BSRRL = val;
+void gpio_set_bsrrl(struct gpio *gpio, uint32_t val)
+{
+	gpio->dev->BSRRL = val;
 }
 
-void gpio_set_bsrrh(struct gpio *gpio, uint32_t val) {
-    gpio->dev->BSRRH = val;
+void gpio_set_bsrrh(struct gpio *gpio, uint32_t val)
+{
+	gpio->dev->BSRRH = val;
 }
 
 
@@ -87,73 +102,83 @@ void gpio_set_bsrrh(struct gpio *gpio, uint32_t val) {
 /* External GPIO Pin Interface ************************************************/
 
 struct pin {
-    struct gpio *bank;
-    uint8_t pin_num;
+	struct gpio *bank;
+	uint8_t pin_num;
 };
 
-void pin_enable(struct pin *pin) {
-    gpio_enable(pin->bank);
+void pin_enable(struct pin *pin)
+{
+	gpio_enable(pin->bank);
 }
 
-void pin_set_mode(struct pin *pin, enum pin_mode mode) {
-    gpio_reset_moder(pin->bank, GPIO_MODER_MODER0 << (pin->pin_num * 2));
+void pin_set_mode(struct pin *pin, enum pin_mode mode)
+{
+	gpio_reset_moder(pin->bank, GPIO_MODER_MODER0 << (pin->pin_num * 2));
 
-    uint32_t mask = (uint32_t)mode << (pin->pin_num * 2);
-    gpio_update_moder(pin->bank, mask);
+	uint32_t mask = (uint32_t)mode << (pin->pin_num * 2);
+	gpio_update_moder(pin->bank, mask);
 }
 
-void pin_set_otype(struct pin *pin, enum pin_type type) {
-    gpio_reset_otyper(pin->bank, GPIO_OTYPER_OT_0 << pin->pin_num);
+void pin_set_otype(struct pin *pin, enum pin_type type)
+{
+	gpio_reset_otyper(pin->bank, GPIO_OTYPER_OT_0 << pin->pin_num);
 
-    uint32_t mask = (uint32_t)type << pin->pin_num;
-    gpio_update_otyper(pin->bank, mask);
+	uint32_t mask = (uint32_t)type << pin->pin_num;
+	gpio_update_otyper(pin->bank, mask);
 }
 
-void pin_set_ospeed(struct pin *pin, enum pin_speed speed) {
-    gpio_reset_ospeedr(pin->bank, GPIO_OSPEEDER_OSPEEDR0 << (pin->pin_num * 2));
+void pin_set_ospeed(struct pin *pin, enum pin_speed speed)
+{
+	gpio_reset_ospeedr(pin->bank, GPIO_OSPEEDER_OSPEEDR0 << (pin->pin_num * 2));
 
-    uint32_t mask = (uint32_t)speed << (pin->pin_num * 2);
-    gpio_update_ospeedr(pin->bank, mask);
+	uint32_t mask = (uint32_t)speed << (pin->pin_num * 2);
+	gpio_update_ospeedr(pin->bank, mask);
 }
 
-void pin_set_pupd(struct pin *pin, enum pin_pupd pupd) {
-    gpio_reset_pupdr(pin->bank, GPIO_PUPDR_PUPDR0 << pin->pin_num);
+void pin_set_pupd(struct pin *pin, enum pin_pupd pupd)
+{
+	gpio_reset_pupdr(pin->bank, GPIO_PUPDR_PUPDR0 << pin->pin_num);
 
-    uint32_t mask = (uint32_t)pupd << pin->pin_num;
-    gpio_update_pupdr(pin->bank, mask);
+	uint32_t mask = (uint32_t)pupd << pin->pin_num;
+	gpio_update_pupdr(pin->bank, mask);
 }
 
-void pin_set_af(struct pin *pin, enum pin_af af) {
-    int reg = (pin->pin_num & 0x7) * 4;    // [0,7]
-    int lh  = (pin->pin_num >> 0x3) & 0x1; // [0,1]
+void pin_set_af(struct pin *pin, enum pin_af af)
+{
+	int reg = (pin->pin_num & 0x7) * 4;    // [0,7]
+	int lh  = (pin->pin_num >> 0x3) & 0x1; // [0,1]
 
-    gpio_reset_afr(pin->bank, lh, 0xf << reg);
+	gpio_reset_afr(pin->bank, lh, 0xf << reg);
 
-    uint32_t mask = ((uint32_t)af & 0xf) << reg;
-    gpio_modify_afr(pin->bank, lh, mask);
+	uint32_t mask = ((uint32_t)af & 0xf) << reg;
+	gpio_modify_afr(pin->bank, lh, mask);
 }
 
 
-void pin_reset(struct pin *pin) {
-    gpio_set_bsrrh(pin->bank, 0x1 << pin->pin_num);
+void pin_reset(struct pin *pin)
+{
+	gpio_set_bsrrh(pin->bank, 0x1 << pin->pin_num);
 }
 
-void pin_set(struct pin *pin) {
-    gpio_set_bsrrl(pin->bank, 0x1 << pin->pin_num);
+void pin_set(struct pin *pin)
+{
+	gpio_set_bsrrl(pin->bank, 0x1 << pin->pin_num);
 }
 
-void pin_toggle(struct pin *pin) {
-    uint16_t odr = pin->bank->dev->ODR;
+void pin_toggle(struct pin *pin)
+{
+	uint16_t odr = pin->bank->dev->ODR;
 
-    if (odr & (1 << pin->pin_num))
-        pin_reset(pin);
-    else
-        pin_set(pin);
+	if (odr & (1 << pin->pin_num))
+		pin_reset(pin);
+	else
+		pin_set(pin);
 }
 
-bool pin_read(struct pin *pin) {
-    uint16_t idr = gpio_get_idr(pin->bank);
-    return (idr & (1 << pin->pin_num)) != 0;
+bool pin_read(struct pin *pin)
+{
+	uint16_t idr = gpio_get_idr(pin->bank);
+	return (idr & (1 << pin->pin_num)) != 0;
 }
 
 /* GPIO Bank Definition *******************************************************/
@@ -166,7 +191,7 @@ struct pin _pin_ ## b ## n = {                    \
     .bank    = & _gpio_ ## b,                     \
     .pin_num = n                                  \
 };                                                \
-
+ 
 /**
  * Define a GPIO bank
  */

@@ -31,9 +31,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #ifdef STM32F2XX
- #include "stm32f2xx.h"
+#include "stm32f2xx.h"
 #elif defined(STM32F10X_CL)
- #include "stm32f10x.h"
+#include "stm32f10x.h"
 #endif /* STM32F2XX */
 
 #include "usbd_cdc_core.h"
@@ -45,12 +45,11 @@
 /* The following structures groups all needed parameters to be configured for the
    ComPort. These parameters can modified on the fly by the host through CDC class
    command class requests. */
-typedef struct
-{
-  uint32_t bitrate;
-  uint8_t  format;
-  uint8_t  paritytype;
-  uint8_t  datatype;
+typedef struct {
+	uint32_t bitrate;
+	uint8_t  format;
+	uint8_t  paritytype;
+	uint8_t  datatype;
 } LINE_CODING;
 
 /* Exported constants --------------------------------------------------------*/
@@ -58,9 +57,9 @@ typedef struct
    The IRQ handler function is implemented in the usbd_cdc_vcp.c file. */
 
 #ifdef USE_STM3210C_EVAL
- #define EVAL_COM_IRQHandler            USART2_IRQHandler
+#define EVAL_COM_IRQHandler            USART2_IRQHandler
 #else
- #define EVAL_COM_IRQHandler            USART3_IRQHandler
+#define EVAL_COM_IRQHandler            USART3_IRQHandler
 #endif /* USE_STM322xG_EVAL */
 
 
