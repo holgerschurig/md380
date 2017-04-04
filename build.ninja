@@ -15,18 +15,19 @@ rule cc
   deps = gcc
   depfile = $out.d
   command = $cc -MMD -MF $out.d $cflags $includes -c $in -o $out
-  #desc = CC  $in
+  description = CC   $in
 
 rule ar
   command = $ar rcs $out $in
-  #desc = LD  $out
+  description = AR   $out
   
 rule ld
   command = $cc $c_cpu $c_opt $in -nostartfiles -Tmd380.lds -Xlinker -o$out
-  #desc = LD  $out
+  description = LINK $out
 
 rule objcopy
   command = $objcopy -O binary $in $out
+  description = OBJ  $out
 
 # FreeRTOS sources
 #build obj/croutine.o: cc freertos/FreeRTOS/Source/croutine.c
