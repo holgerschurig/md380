@@ -4,5 +4,6 @@
 /.ninja_log
 /.ninja_deps
 /obj
+/STM32Cube_FW_*
 /doc/STM32Cube_*.pdf
 /doc/stm32f405*.pdf
