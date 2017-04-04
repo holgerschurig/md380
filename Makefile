@@ -4,7 +4,7 @@ PROJECT=md380
 all:: freertos/.git/HEAD md380.img
 
 md380.img: freertos/.git/HEAD
-	ninja
+	@ninja | cat
 
 clean::
 	ninja -t clean
