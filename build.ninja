@@ -12,7 +12,9 @@ cflags = $c_std $c_def $c_cpu $c_opt
 includes = -I. -Istm -Ifreertos/FreeRTOS/Source/include -Ifreertos/FreeRTOS/Source/portable/GCC/${rtos_arch}
 
 rule cc
-  command = $cc $cflags $includes -c $in -o $out
+  deps = gcc
+  depfile = $out.d
+  command = $cc -MMD -MF $out.d $cflags $includes -c $in -o $out
   #desc = CC  $in
 
 rule ar
