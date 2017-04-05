@@ -165,6 +165,6 @@ prunertos:
 
 # See for example https://github.com/HANDS-FREE/OpenRE how this might work out
 
-ucosiii: ucosiii/README.txt
-ucosiii/README.txt:
-	svn checkout https://svn.code.sf.net/p/stm32f103xe-ucosiii/svn/Trunk ucosiii
+ucosiii: ucosiii/.git/HEAD
+ucosiii/.git/HEAD:
+	git clone --depth 1 https://github.com/HANDS-FREE/OpenRE ucosiii
