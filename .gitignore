@@ -5,6 +5,7 @@
 /.ninja_deps
 /obj
 /STM32Cube*
+/doc/CS8x0*.pdf
 /doc/GT3136*.pdf
 /doc/ILI9481*.pdf
 /doc/MD380*.pdf

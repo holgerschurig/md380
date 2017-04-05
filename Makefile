@@ -56,6 +56,10 @@ doc/XC6204_PMIC.pdf:
 doc:: doc/ILI9481_LCD_Display.pdf
 doc/ILI9481_LCD_Display.pdf:
 	wget -O $@ -c http://www.ncsys.co.jp/webshop/GTV350MPZI04\(ILI9481\).pdf
+doc:: doc/CS8x0_Service_Manual.pdf
+doc/CS8x0_Service_Manual.pdf:
+	wget -O $@ -c http://www.connectsystems.com/software/CS810_documents/CS800%20Service%20Manual.pdf
+
 
 
 #############################################################################
