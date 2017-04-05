@@ -1,0 +1,2 @@
+#!/bin/sh
+r2 -a arm -b 16 -i make_ucos_sigs.r ../obj/ucos.elf -q

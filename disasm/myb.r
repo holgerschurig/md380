@@ -12,9 +12,8 @@ S 0x20000000 0x20000000 0x00020000 0x00020000 ram   mrw
 S 0x10000000 0x10000000 0x00010000 0x00010000 TCRAM mrw
 e asm.section.sub = true
 
-
-# Generate signures with: aac;zaF;z* >sig.r
-#. sig.r
+# Generate signures with: ./make_ucos_sigs
+. sig_ucos.r
 
 e cfg.fortunes = false
 e asm.lines.ret = true
@@ -278,8 +277,8 @@ f vec.FPU @ 0x08005834
 
 CCa 0x08003048 store current PRIMASK in r0
 CCa 0x0800304c disable IRQ via PRIMASK
-.(fn 0x08003048 disable_irq)
-.(fn 0x08003050 restore_irq)
+.(fn 0x08003048 CPU_SR_Save_0)
+.(fn 0x08003050 CPU_SR_Restore_)
 .(fr 0x08003056)
 .(fr 0x0800307a)
 .(fn 0x08003082 vec.PEND_SV)
