@@ -11,6 +11,11 @@ S 0x40000000 0x40000000 0x01000000 0x01000000 stm32 mrw
 S 0x20000000 0x20000000 0x00010000 0x00010000 ram   mrw
 S 0x10000000 0x10000000 0x00010000 0x00010000 TCRAM mrw
 e asm.section.sub = true
+
+
+# Generate signures with: aac;zaF;z* >sig.r
+#. sig.r
+
 e cfg.fortunes = false
 e asm.lines.ret = true
 e asm.cmtcol = 55
@@ -129,7 +134,6 @@ f vec.HASH_RNG @ 0x08005830
 f vec.FPU @ 0x08005834
 
 #s 0x08000000
-#pd 188
 
 # The vectors are described in the PM chapter 12.2
 
@@ -145,9 +149,12 @@ f vec.FPU @ 0x08005834
 .(d4 0x08000dd4 11)
 .(f_ 0x08000e00)
 .(d4 0x08000fe8 1)
+.(fr 0x08000fec)
 .(fr 0x08001050)
 .(d4 0x0800105c 7)
 .(d4 0x080010dc 1)
+.(fr 0x08001078)
+.(fr 0x080010e0)
 .(fr 0x08001140)
 .(fr 0x08001148)
 .(d4 0x0800116c 15)
@@ -336,6 +343,20 @@ CCa 0x0800304c disable IRQ via PRIMASK
 .(fr 0x0800428a)
 .(fr 0x08004344)
 .(fr 0x0800438e)
+.(d4 0x08004970 16)
+.(fr 0x080049b0)
+.(fr 0x080049ee)
+.(fr 0x08004a08)
+.(d4 0x08004a6c 10)
+.(fr 0x08004a94)
+.(d4 0x08004ae4 1)
+.(fr 0x08004ae8)  # unsure
+.(fr 0x08004ef2)
+.(fr 0x08004efc)
+.(fr 0x08004f10)
+.(fr 0x08005020)
+.(fr 0x08005024)
+.(d4 0x08005038 13)
 
 .(fn 0x0800506c SystemInit)
 CCa 0x0800506c see stm/system_stm32f4xx.c
@@ -372,7 +393,6 @@ CCa 0x080055e4 set DN (Default NaN)
 CCa 0x080055e8 store in FPSCR
 .(fn 0x08005620 main2)
 
-e asm.bytes = 0
 .(fn 0x080050cc SetSysClock)
 afvs 0 HSEStatus int
 afvs 4 StartUpCounter qint
@@ -387,8 +407,12 @@ f RCC_RCC_APB1ENR @ 0x40023840
 CCa 0x08005128 set PWR_CR_VOS
 
 #Vp
-s SetSysClock
+# s SetSysClock
 #e asm.describe=1
 #e asm.esil=1
-pdf @ main2
+# pdf @ main2
+e asm.bytes = 1
 
+
+afM >map
+#pd 600
