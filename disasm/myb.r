@@ -10,7 +10,7 @@ S 0xe0000000 0xe0000000 0x01000000 0x01000000 m4    mrw
 S 0x40000000 0x40000000 0x01000000 0x01000000 stm32 mrw
 S 0x20000000 0x20000000 0x00020000 0x00020000 ram   mrw
 S 0x10000000 0x10000000 0x00010000 0x00010000 TCRAM mrw
-e asm.section.sub = true
+#e asm.section.sub = true
 
 # Generate signures with: ./make_ucos_sigs
 . sig_ucos.r
@@ -24,7 +24,7 @@ e asm.cmtcol = 55
 # Define a function, optionally analyze it recursively and seek to it
 (f_ addr,s $0,af)
 (fr addr,s $0,afr)
-(fn addr name,s $0,f $1 @ $0,afr) # dito, but with a name
+(fn addr name,s $0,f $1 @ $0,af) # dito, but with a name
 
 # Define a data section and seek to it
 (d4 addr size,Cd 4 $1 @ $0,s $0)
@@ -39,6 +39,8 @@ f CPACE @ 0xE000ED88
 f AIRCR @ 0xE000ED0C
 
 . bootloader.r
+
+# The vectors are described in the PM chapter 12.2
 
 .(d4 0x08000000 98)
 f vec.RESET @ 0x080056a4
@@ -134,16 +136,36 @@ f vec.CRYP @ 0x0800582c
 f vec.HASH_RNG @ 0x08005830
 f vec.FPU @ 0x08005834
 
-#s 0x08000000
-
-# The vectors are described in the PM chapter 12.2
+#############################################################################
+#
+#  Named functions
+#
+#############################################################################
+# Keep names functions near the top, so that they are known when the
+# unnamed functions trigger an afr.
 
 .(fn 0x08000188 NVIC_SystemReset)
+.(fn 0x080011d2 MAL_DeInit)
+.(fn 0x080010e0 DFU_LeaveDFUMode)
+
+.(fn 0x080007f4 080007f4.retzero)
+.(fn 0x080022b2 DCD_DevDisconnect)
+.(fn 0x080023c8 080023c8.retzero)
+.(fn 0x08003048 CPU_SR_Save_0)
+.(fn 0x08003050 CPU_SR_Restore_)
+.(fn 0x08003082 vec.PEND_SV)
+.(fn 0x08003de8 otg_fs_int)
+.(fn 0x0800506c SystemInit)
+.(fn 0x080056a4 vec.RESET)
+.(fn 0x080056c0 main0)
+.(fn 0x080055d4 init_fpu)
+.(fn 0x08005620 main2)
+.(fn 0x080050cc SetSysClock)
+
 .(fr 0x080001a8)
 .(f_ 0x080001ce)
 .(f_ 0x08000204)      # TODO .(fr) here trashes data area @ 0x08000dd4
 .(f_ 0x080002c2)
-.(fn 0x080007f4 080007f4.retzero)
 .(fr 0x080007f8)
 .(fr 0x0800089a)
 .(f_ 0x08000942)
@@ -155,12 +177,10 @@ f vec.FPU @ 0x08005834
 .(d4 0x0800105c 7)
 .(d4 0x080010dc 1)
 .(fr 0x08001078)
-.(fn 0x080010e0 DFU_LeaveDFUMode)
 .(fr 0x08001140)
 .(fr 0x08001148)
 .(d4 0x0800116c 15)
 .(fr 0x080011a8)
-.(fn 0x080011d2 MAL_DeInit)
 .(f_ 0x080011fc)
 .(f_ 0x08001248)
 .(f_ 0x08001298)
@@ -228,13 +248,11 @@ f vec.FPU @ 0x08005834
 .(fr 0x08002242)
 .(fr 0x08002288)
 .(fr 0x0800229c)
-.(fn 0x080022b2 DCD_DevDisconnect)
 .(fr 0x080022c8)
 .(d4 0x08002330 1)
 .(fr 0x08002334)
 .(fr 0x0800235e)
 .(fr 0x08002374)
-.(fn 0x080023c8 080023c8.retzero)
 .(fr 0x080023cc)
 .(fr 0x0800241e)
 .(fr 0x080024b2)
@@ -276,14 +294,10 @@ f vec.FPU @ 0x08005834
 .(fr 0x08002fd4)
 .(fr 0x08002fe8)
 .(fr 0x08002ff6)
-
 CCa 0x08003048 store current PRIMASK in r0
 CCa 0x0800304c disable IRQ via PRIMASK
-.(fn 0x08003048 CPU_SR_Save_0)
-.(fn 0x08003050 CPU_SR_Restore_)
 .(fr 0x08003056)
 .(fr 0x0800307a)
-.(fn 0x08003082 vec.PEND_SV)
 .(d4 0x080030d8 9)
 .(fr 0x080030fc)
 .(fr 0x08003176)
@@ -332,7 +346,6 @@ CCa 0x0800304c disable IRQ via PRIMASK
 .(fr 0x08003ca4)
 .(d4 0x08003d80 3)
 .(fr 0x08003d8c)
-.(fn 0x08003de8 otg_fs_int)
 .(fr 0x08003eba)
 .(fr 0x08003f02)
 # 0x08003f2c
@@ -358,13 +371,10 @@ CCa 0x0800304c disable IRQ via PRIMASK
 .(fr 0x08005020)
 .(fr 0x08005024)
 .(d4 0x08005038 13)
-
-.(fn 0x0800506c SystemInit)
 CCa 0x0800506c see stm/system_stm32f4xx.c
 # Enable FPU
 CCa 0x0800506e access Coprozessor Access Control Register
 CCa 0x08005072 enable CP10 and CP11 coprocessors (FPU)
-
 # Set up PLL
 CCa 0x0800507e set HSION
 CCa 0x08005088 weird, reset value already 0x00000000
@@ -372,30 +382,21 @@ CCa 0x08005092 unset PLLON, CSSON, HSEON
 CCa 0x0800509c weird, reset value already 0x24003010
 CCa 0x080050a2 unset HSEBYP
 CCa 0x080050ac weird, reset value already 0x00000000
-
 CCa 0x080050b0 delay loop
-
 # Set up vector table
 f VTOR @ 0xe000ed08
 CCa 0x080050c2 Vector Table Offset Register
-
 .(d4 0x08005198 76)
 .(d4 0x080054d4 1)
-.(fn 0x080056a4 vec.RESET)
 .(d4 0x080056ac 5)
 .(ds 0x080054f0 40 str.SPI_Flash_Memory1)
 .(ds 0x08005518 40 str.SPI_Flash_Memory2)
-.(fn 0x080056c0 main0)
-.(fn 0x080055d4 init_fpu)
 CCa 0x080055dc access CPACE
 CCa 0x080055de enable CP10 and CP11 coprocessors (FPU)
 CCa 0x080055e4 set DN (Default NaN)
 CCa 0x080055e8 store in FPSCR
-.(fn 0x08005620 main2)
-
-.(fn 0x080050cc SetSysClock)
-afvs 0 HSEStatus int
-afvs 4 StartUpCounter qint
+#afvs 0 HSEStatus int
+#afvs 4 StartUpCounter qint
 CCa 0x080050da set HSEON
 CCa 0x080050e6 check HSERDY
 CCa 0x080050fa HSE_STARTUP_TIMEOUT
