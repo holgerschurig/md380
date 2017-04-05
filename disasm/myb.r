@@ -138,7 +138,7 @@ f vec.FPU @ 0x08005834
 
 # The vectors are described in the PM chapter 12.2
 
-.(fr 0x08000188)
+.(fn 0x08000188 NVIC_SystemReset)
 .(fr 0x080001a8)
 .(f_ 0x080001ce)
 .(f_ 0x08000204)      # TODO .(fr) here trashes data area @ 0x08000dd4
@@ -155,12 +155,12 @@ f vec.FPU @ 0x08005834
 .(d4 0x0800105c 7)
 .(d4 0x080010dc 1)
 .(fr 0x08001078)
-.(fr 0x080010e0)
+.(fn 0x080010e0 DFU_LeaveDFUMode)
 .(fr 0x08001140)
 .(fr 0x08001148)
 .(d4 0x0800116c 15)
 .(fr 0x080011a8)
-.(fr 0x080011d2)
+.(fn 0x080011d2 MAL_DeInit)
 .(f_ 0x080011fc)
 .(f_ 0x08001248)
 .(f_ 0x08001298)
@@ -228,7 +228,7 @@ f vec.FPU @ 0x08005834
 .(fr 0x08002242)
 .(fr 0x08002288)
 .(fr 0x0800229c)
-.(fr 0x080022b2)
+.(fn 0x080022b2 DCD_DevDisconnect)
 .(fr 0x080022c8)
 .(d4 0x08002330 1)
 .(fr 0x08002334)
@@ -385,7 +385,7 @@ CCa 0x080050c2 Vector Table Offset Register
 .(d4 0x080056ac 5)
 .(ds 0x080054f0 40 str.SPI_Flash_Memory1)
 .(ds 0x08005518 40 str.SPI_Flash_Memory2)
-.(fn 0x080056c0 main)
+.(fn 0x080056c0 main0)
 .(fn 0x080055d4 init_fpu)
 CCa 0x080055dc access CPACE
 CCa 0x080055de enable CP10 and CP11 coprocessors (FPU)
@@ -414,5 +414,6 @@ CCa 0x08005128 set PWR_CR_VOS
 e asm.bytes = 1
 
 
+s DFU_LeaveDFUMode
 afM >a.map
-#pd 600
+Vp
