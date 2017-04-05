@@ -1,8 +1,6 @@
 /freertos
 /?
 /a.*
-/.ninja_log
-/.ninja_deps
 /obj
 /STM32Cube*
 /doc/CS8x0*.pdf

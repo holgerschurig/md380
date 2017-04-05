@@ -1,3 +1,5 @@
+builddir = obj
+
 # @compile: make clean all
 cross = arm-none-eabi
 rtos_arch = ARM_CM4F
