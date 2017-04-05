@@ -27,6 +27,10 @@ e asm.cmtcol = 55
 (ds addr len lbl,Cs $1 @ $0,f $2 @ $0)
 
 . cpu.r
+f RCC_CR @ 0x40023800
+f RCC_PLLCFGR @ 0x40023804
+f RCC_CFGR @ 0x40023808
+f RCC_CIR @ 0x4002380C
 
 . bootloader.r
 
@@ -341,10 +345,6 @@ CCa 0x0800506e access Coprozessor Access Control Register
 CCa 0x08005072 enable CP10 and CP11 coprocessors (FPU)
 
 # Set up PLL
-f RCC_CR @ 0x40023800
-f RCC_PLLCFGR @ 0x40023804
-f RCC_CFGR @ 0x40023808
-f RCC_CIR @ 0x4002380C
 CCa 0x0800507e set HSION
 CCa 0x08005088 weird, reset value already 0x00000000
 CCa 0x08005092 unset PLLON, CSSON, HSEON
