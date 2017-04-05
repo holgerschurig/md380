@@ -1,6 +1,6 @@
 e asm.arch = arm
 e asm.cpu = cortex
-e asm.section.sub = true
+#e asm.section.sub = true
 
 
 e cfg.fortunes = false
@@ -13,5 +13,6 @@ f RCC_PLLCFGR @ 0x40023804
 f RCC_CFGR @ 0x40023808
 f RCC_CIR @ 0x4002380C
 
-s main
-Pv
+s NVIC_SystemReset
+aac
+Vp
