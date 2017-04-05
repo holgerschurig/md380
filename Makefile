@@ -59,6 +59,10 @@ doc/ILI9481_LCD_Display.pdf:
 doc:: doc/CS8x0_Service_Manual.pdf
 doc/CS8x0_Service_Manual.pdf:
 	wget -O $@ -c http://www.connectsystems.com/software/CS810_documents/CS800%20Service%20Manual.pdf
+doc:: doc/UC-OS-III.pdf
+doc/UC-OS-III.pdf:
+	wget -O $@ -c https://presentations.inxpo.com/Shows/UBM/EETimes/STMicroelectronics/12-10/Booths/Micrium/100-uCOS-III-ST-STM32-002.pdf
+
 
 
 
@@ -153,3 +157,14 @@ prunertos:
 	rm -rf freertos/FreeRTOS/Source/portable/WizC
 
 
+#############################################################################
+#
+#  µC/OS-III
+#
+#############################################################################
+
+# See for example https://github.com/HANDS-FREE/OpenRE how this might work out
+
+ucosiii: ucosiii/README.txt
+ucosiii/README.txt:
+	svn checkout https://svn.code.sf.net/p/stm32f103xe-ucosiii/svn/Trunk ucosiii

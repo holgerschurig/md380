@@ -1,4 +1,5 @@
 /freertos
+/ucosiii
 /?
 /a.*
 /obj
@@ -9,6 +10,7 @@
 /doc/MD380*.pdf
 /doc/SKY72310*.pdf
 /doc/STM32Cube*.pdf
-/doc/XC6204*.pdf
 /doc/STM32F405*.pdf
+/doc/UC-OS-III.pdf
+/doc/XC6204*.pdf
 /README.html
