@@ -35,6 +35,8 @@ f RCC_CR @ 0x40023800
 f RCC_PLLCFGR @ 0x40023804
 f RCC_CFGR @ 0x40023808
 f RCC_CIR @ 0x4002380C
+f CPACE @ 0xE000ED88
+f AIRCR @ 0xE000ED0C
 
 . bootloader.r
 
@@ -360,7 +362,6 @@ CCa 0x0800304c disable IRQ via PRIMASK
 .(fn 0x0800506c SystemInit)
 CCa 0x0800506c see stm/system_stm32f4xx.c
 # Enable FPU
-f CPACE @ 0xE000ED88
 CCa 0x0800506e access Coprozessor Access Control Register
 CCa 0x08005072 enable CP10 and CP11 coprocessors (FPU)
 
