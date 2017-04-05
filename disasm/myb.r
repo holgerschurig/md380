@@ -18,9 +18,9 @@ e asm.cmtcol = 55
 (func addr sz name,af $2 $0)
 
 # Define a function, optionally analyze it recursively and seek to it
-(f_ addr,af @ $0,s $0)
-(fr addr,afr @ $0,s $0)
-(fn addr name,f $1 @ $0,afr @ $0,s $0) # dito, but with a name
+(f_ addr,s $0,af)
+(fr addr,s $0,afr)
+(fn addr name,s $0,f $1 @ $0,afr) # dito, but with a name
 
 # Define a data section and seek to it
 (d4 addr size,Cd 4 $1 @ $0,s $0)
