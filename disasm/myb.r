@@ -413,5 +413,5 @@ CCa 0x08005128 set PWR_CR_VOS
 e asm.bytes = 1
 
 
-afM >map
+afM >a.map
 #pd 600
