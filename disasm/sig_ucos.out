@@ -1,0 +1,166 @@
+|           ;-- sym.0x0800d315:
+/ (fcn) sym.__fp_lock 4
+|   sym.__fp_lock ();
+|           0x0800d314  ~   0020           movs r0, 0   ; /build/gcc-arm-none-eabi-Y5Ecbt/gcc-arm-none-eabi-11/build/a
+\           0x0800d316      7047           bx lr
+\           ; --------------------------------------
+|           ;-- sym.0x0800d319:
+/ (fcn) sym.__fp_unlock 4
+|   sym.__fp_unlock ();
+|           0x0800d318  ~   0020           movs r0, 0   ; /build/gcc-arm-none-eabi-Y5Ecbt/gcc-arm-none-eabi-11/build/a
+\           0x0800d31a      7047           bx lr
+\           ; --------------------------------------
+|       `-> ;-- sym.0x0800aa71:
+/ (fcn) sym.RTC_Alarm_IRQHandler 2
+|   sym.RTC_Alarm_IRQHandler ();
+|       |      ; JMP XREF from 0x0800aa70 (sym.RTC_Alarm_IRQHandler)
+\       `-> 0x0800aa70  ~   fee7           b .text.sym.RTC_Alarm_IRQHandler
+        `-> ;-- $t_7:
+/ (fcn) sym.CPU_SW_Exception 2
+|   sym.CPU_SW_Exception ();
+|       |      ; JMP XREF from 0x0800042c (sym.CPU_SW_Exception)
+\       `-> 0x0800042c      fee7           b .text.sym.CPU_SW_Exception
+|- loc.08006f1c 4
+|   loc.08006f1c ();
+|              ; JMP XREF from 0x08006fca (loc.08006f1c + 174)
+|           0x08006f1c      04b0           add sp, .ARM.attributes.0x10
+\           0x08006f1e      70bd           pop {r4, r5, r6, pc}
+\           ; --------------------------------------
+            ;-- $t_344:
+/ (fcn) sym.__seofread 4
+|   sym.__seofread ();
+|           0x0800e89c      0020           movs r0, 0
+\           0x0800e89e      7047           bx lr
+\           ; --------------------------------------
+            ;-- $t_308:
+/ (fcn) sym.__locale_charset 4
+|   sym.__locale_charset ();
+|              ; CALL XREF from 0x080102ce (sym._wcrtomb_r)
+|              ; CALL XREF from 0x080102aa (sym._wcrtomb_r)
+|              ; CALL XREF from 0x0801036a (sym._wctomb_r)
+|              ; CALL XREF from 0x08010320 (sym.wcrtomb)
+|              ; CALL XREF from 0x080102fc (sym.wcrtomb)
+|           0x0800d838      0048           ldr r0, loc._d_323 ; [0x800d83c:4]=LOAD1.0x200004ac str.ASCII ; LEA loc._d_
+\           0x0800d83a      7047           bx lr
+            ;-- $t_215:
+/ (fcn) sym.OSCfg_Init 2
+|   sym.OSCfg_Init ();
+|              ; JMP XREF from 0x080026ce (sym.OSInit)
+\           0x08009278      7047           bx lr
+\           ; --------------------------------------
+            ;-- $t_312:
+/ (fcn) sym._localeconv_r 4
+|   sym._localeconv_r ();
+|              ; CALL XREF from 0x0800ab5e (sym._vfprintf_r)
+|           0x0800d858      0048           ldr r0, loc._d_326 ; [0x800d85c:4]=LOAD1.0x20000474 obj.lconv ; LEA loc._d_
+\           0x0800d85a      7047           bx lr
+\           ; --------------------------------------
+            ;-- $t_66:
+/ (fcn) sym.OS_Dbg_Init 2
+|   sym.OS_Dbg_Init ();
+|              ; CALL XREF from 0x080026c4 (sym.OSInit)
+\           0x08003814      7047           bx lr
+\           ; --------------------------------------
+/ (fcn) sym.CPU_IntEn 4
+|   sym.CPU_IntEn ();
+|           0x080003d0      62b6           cpsie i
+\           0x080003d2      7047           bx lr
+\           ; --------------------------------------
+/ (fcn) sym.CPU_TS_Update 2
+|   sym.CPU_TS_Update ();
+\           0x080004cc      7047           bx lr
+\           ; --------------------------------------
+/ (fcn) sym.CPU_WaitForExcept 4
+|   sym.CPU_WaitForExcept ();
+|           0x080003e6      20bf           wfe
+\           0x080003e8      7047           bx lr
+\           ; --------------------------------------
+            ;-- $t_297:
+/ (fcn) sym.__sfp_lock_acquire 2
+|   sym.__sfp_lock_acquire ();
+|              ; CALL XREF from 0x0800f7dc (sym._fclose_r)
+\           0x0800d4ec      7047           bx lr
+\           ; --------------------------------------
+            ;-- __subdf3:
+/ (fcn) sym.__aeabi_dsub 4
+|   sym.__aeabi_dsub ();
+|              ; XREFS: CALL 0x0800c414  CALL 0x0800c586  CALL 0x0800c644  CALL 0x0800cb3e  CALL 0x0800cb5c  
+|              ; XREFS: CALL 0x0800cb8a  CALL 0x0800cbc0  CALL 0x0800cc0a  CALL 0x0800cdf2  CALL 0x0800cfac  
+|              ; XREFS: CALL 0x0800cff4  CALL 0x0800d0e0  
+\           0x080096f8      83f00043       eor r3, r3, 0x80000000
+            ;-- $t_300:
+/ (fcn) sym.__sinit_lock_release 2
+|   sym.__sinit_lock_release ();
+\           0x0800d4f8      7047           bx lr
+\           ; --------------------------------------
+        ,=< ;-- $t_10:
+/ (fcn) sym.CPU_TS_Get32 4
+|   sym.CPU_TS_Get32 ();
+\       ,=< 0x080004c8      08f0bcbd       b.w .text.sym.CPU_TS_TmrRd
+            ;-- $t_320:
+/ (fcn) sym.__malloc_lock 2
+|   sym.__malloc_lock ();
+|              ; CALL XREF from 0x0800d5cc (sym.cleanup_glue)
+|              ; CALL XREF from 0x0800d974 (sym._malloc_r)
+|              ; CALL XREF from 0x0800fd76 (sym._realloc_r)
+|              ; CALL XREF from 0x0800d52c (sym._malloc_trim_r)
+\           0x0800df20      7047           bx lr        ; /build/gcc-arm-none-eabi-Y5Ecbt/gcc-arm-none-eabi-11/build/a
+\           ; --------------------------------------
+            ;-- $t_311:
+/ (fcn) sym.__locale_cjk_lang 4
+|   sym.__locale_cjk_lang ();
+|           0x0800d854      0020           movs r0, 0
+\           0x0800d856      7047           bx lr
+\           ; --------------------------------------
+            ;-- $t_5:
+/ (fcn) sym.CPU_IntDis 4
+|   sym.CPU_IntDis ();
+|              ; DATA XREF from 0x0800034a (sym.float_task)
+|           0x080003cc      72b6           cpsid i
+\           0x080003ce      7047           bx lr
+\           ; --------------------------------------
+            ;-- $t_314:
+/ (fcn) sym.localeconv 4
+|   sym.localeconv ();
+|           0x0800d870      0048           ldr r0, loc._d_328 ; [0x800d874:4]=LOAD1.0x20000474 obj.lconv ; LEA loc._d_
+\           0x0800d872      7047           bx lr
+\           ; --------------------------------------
+/ (fcn) sym.CPU_WaitForInt 4
+|   sym.CPU_WaitForInt ();
+|           0x080003e2      30bf           wfi
+\           0x080003e4      7047           bx lr
+\           ; --------------------------------------
+            ;-- $t_310:
+/ (fcn) sym.__locale_msgcharset 4
+|   sym.__locale_msgcharset ();
+|           0x0800d84c      0048           ldr r0, loc._d_325 ; [0x800d850:4]=LOAD1.0x20000454 obj.lc_message_charset 
+\           0x0800d84e      7047           bx lr
+\           ; --------------------------------------
+            ;-- $t_298:
+/ (fcn) sym.__sfp_lock_release 2
+|   sym.__sfp_lock_release ();
+|              ; CALL XREF from 0x0800f7e4 (sym._fclose_r)
+\           0x0800d4f0      7047           bx lr
+\           ; --------------------------------------
+            ;-- $t_299:
+/ (fcn) sym.__sinit_lock_acquire 2
+|   sym.__sinit_lock_acquire ();
+\           0x0800d4f4      7047           bx lr
+\           ; --------------------------------------
+        |   ;-- $t_373:
+/ (fcn) sym.cleanup_glue 422
+|   sym.cleanup_glue ();
+|       !      ; JMP XREF from 0x080101d4 (sym._reclaim_reent)
+|       !      ; CALL XREF from 0x0801013a (sym.cleanup_glue)
+|       !      ; DATA XREF from 0x0800fd9a (sym._realloc_r)
+|       |   0x08010130      38b5           push {r3, r4, r5, lr} ; /build/gcc-arm-none-eabi-Y5Ecbt/gcc-arm-none-eabi-1
+|       |   0x08010132      0c46           mov r4, r1   ; /build/gcc-arm-none-eabi-Y5Ecbt/gcc-arm-none-eabi-11/build/a
+|       |   0x08010134      0968           ldr r1, [r1]
+|       |   0x08010136      0546           mov r5, r0
+|      ,==< 0x08010138      09b1           cbz r1, .text.0x801013e
+|      ||   0x0801013a      fff7f9ff       bl .text.sym.cleanup_glue
+|      |!      ; JMP XREF from 0x08010138 (sym.cleanup_glue)
+|      `--> 0x0801013e      2846           mov r0, r5
+|       |   0x08010140      2146           mov r1, r4
+|       |   0x08010142      bde83840       pop.w {r3, r4, r5, lr}
+\       `=< 0x08010146      fdf73bba       b.w .text.sym._free_r
