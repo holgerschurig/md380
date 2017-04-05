@@ -42,7 +42,7 @@ for s in open("build.ninja").readlines():
 		# print "RULE:", rule
 		# print "SOURCE:", source
 		# print "DEST:", dest
-		if rule == "cc":
+		if rule in ("cxx", "as") or rule.startswith("cc"):
 			dest = os.path.join("obj", os.path.basename(dest) + ".o")
 			s = "build %s: %s %s" % (dest, rule, source)
 			files.append( (dest, s) )
