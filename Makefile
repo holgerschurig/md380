@@ -17,6 +17,13 @@ clean::
 #
 #############################################################################
 .PHONY:: doc
+
+# Hardware
+doc:: doc/MD380_Schematics.pdf
+doc/MD380_Schematics.pdf:
+	mkdir -p doc
+	wget -O $@ -c http://www.pc5e.nl/downloads/md380/documents/MD-380UHF-RF-schematic.pdf
+
 doc:: doc/STM32F405.pdf
 doc/STM32F405.pdf:
 	mkdir -p doc
@@ -29,18 +36,6 @@ doc:: doc/STM32F405_Programming_Manual.pdf
 doc/STM32F405_Programming_Manual.pdf:
 	mkdir -p doc
 	wget -O $@ -c http://www.st.com/resource/en/programming_manual/dm00046982.pdf
-doc:: doc/STM32Cube_UM1725_HAL_LL_Driver_description.pdf
-doc/STM32Cube_UM1725_HAL_LL_Driver_description.pdf:
-	mkdir -p doc
-	wget -O $@ -c http://www.st.com/resource/en/user_manual/dm00105879.pdf
-doc:: doc/STM32Cube_UM1734_USB_Device_Library.pdf
-doc/STM32Cube_UM1734_USB_Device_Library.pdf:
-	mkdir -p doc
-	wget -O $@ -c http://www.st.com/resource/en/user_manual/dm00108129.pdf
-doc:: doc/MD380_Schematics.pdf
-doc/MD380_Schematics.pdf:
-	mkdir -p doc
-	wget -O $@ -c http://www.pc5e.nl/downloads/md380/documents/MD-380UHF-RF-schematic.pdf
 doc:: doc/SKY72310_Frequency_Synthesizer.pdf
 doc/SKY72310_Frequency_Synthesizer.pdf:
 	mkdir -p doc
@@ -55,13 +50,62 @@ doc/XC6204_PMIC.pdf:
 	wget -O $@ -c https://www.torexsemi.com/file/xc6204/XC6204-XC6205.pdf
 doc:: doc/ILI9481_LCD_Display.pdf
 doc/ILI9481_LCD_Display.pdf:
+	mkdir -p doc
 	wget -O $@ -c http://www.ncsys.co.jp/webshop/GTV350MPZI04\(ILI9481\).pdf
-doc:: doc/CS8x0_Service_Manual.pdf
-doc/CS8x0_Service_Manual.pdf:
-	wget -O $@ -c http://www.connectsystems.com/software/CS810_documents/CS800%20Service%20Manual.pdf
+doc:: doc/TDA2822D_Audio_Amplifier.pdf
+doc/TDA2822D_Audio_Amplifier.pdf:
+	mkdir -p doc
+	wget -O $@ -c http://www.st.com/resource/en/datasheet/tda2822d.pdf
+doc:: doc/TC75S51F_OpAmp.pdf
+doc/TC75S51F_OpAmp.pdf:
+	mkdir -p doc
+	wget -O $@ -c "https://toshiba.semicon-storage.com/info/docget.jsp?did=21004&prodName=TC75S51F"
+doc:: doc/UMC4N_Power_Transistor.pdf
+doc/UMC4N_Power_Transistor.pdf:
+	mkdir -p doc
+	wget -O $@ -c http://www1.futureelectronics.com/doc/ROHM/UMC4NTR.pdf
+doc:: doc/NJM2902_OpAmp.pdf
+doc/NJM2902_OpAmp.pdf:
+	mkdir -p doc
+	wget -O $@ -c http://www.mouser.com/ds/2/294/NJM2902_E-218313.pdf
+doc:: doc/NJM2100_OpAmp.pdf
+doc/NJM2100_OpAmp.pdf:
+	mkdir -p doc
+	wget -O $@ -c http://www.njr.com/semicon/PDF/NJM2100_E.pdf
+doc:: doc/NRM2904_OpAmp.pdf
+doc/NRM2904_OpAmp.pdf:
+	mkdir -p doc
+	wget -O $@ -c http://www.njr.com/semicon/PDF/NJM2904_E.pdf
+doc:: doc/W15Q128FV_Flash
+doc/W15Q128FV_Flash:
+	mkdir -p doc
+	wget -O $@ -c "https://www.winbond.com/resource-files/w25q128fv_revhh1_100913_website1.pdf"
+doc:: doc/PST9124_Reset.pdf
+doc/PST9124_Reset.pdf:
+	mkdir -p doc
+	wget -O $@ -c "https://www.digchip.com/datasheets/download_datasheet.php?id=790415&part-number=PST9124"
+doc:: doc/LM2734X_Buck_Converter.pdf
+doc/LM2734X_Buck_Converter.pdf:
+	mkdir -p doc
+	wget -O $@ -c http://www.ti.com/lit/ds/symlink/lm2734.pdf
+
+# Software
+doc:: doc/STM32Cube_UM1725_HAL_LL_Driver_description.pdf
+doc/STM32Cube_UM1725_HAL_LL_Driver_description.pdf:
+	mkdir -p doc
+	wget -O $@ -c http://www.st.com/resource/en/user_manual/dm00105879.pdf
+doc:: doc/STM32Cube_UM1734_USB_Device_Library.pdf
+doc/STM32Cube_UM1734_USB_Device_Library.pdf:
+	mkdir -p doc
+	wget -O $@ -c http://www.st.com/resource/en/user_manual/dm00108129.pdf
 doc:: doc/UC-OS-III.pdf
 doc/UC-OS-III.pdf:
 	wget -O $@ -c https://presentations.inxpo.com/Shows/UBM/EETimes/STMicroelectronics/12-10/Booths/Micrium/100-uCOS-III-ST-STM32-002.pdf
+
+# Misc
+doc:: doc/CS8x0_Service_Manual.pdf
+doc/CS8x0_Service_Manual.pdf:
+	wget -O $@ -c http://www.connectsystems.com/software/CS810_documents/CS800%20Service%20Manual.pdf
 
 
 
@@ -165,6 +209,6 @@ prunertos:
 
 # See for example https://github.com/HANDS-FREE/OpenRE how this might work out
 
-ucosiii: ucosiii/.git/HEAD
-ucosiii/.git/HEAD:
-	git clone --depth 1 https://github.com/HANDS-FREE/OpenRE ucosiii
+ucosiii: ucosiii/README.txt
+ucosiii/README.txt:
+	svn checkout https://svn.code.sf.net/p/stm32f103xe-ucosiii/svn/Trunk ucosiii
