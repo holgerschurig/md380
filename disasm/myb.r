@@ -60,7 +60,7 @@ f AIRCR @ 0xE000ED0C
 .(dv 0x2000122c DeviceState3)
 
 #############################################################################
-# see core_cm4.
+# see core_cm4.c
 .(func 0x08000188 30 NVIC_SystemReset)
 
 #############################################################################
@@ -148,7 +148,8 @@ f loc.upload_5 @ 0x8000b56
 f loc.upload_7 @ 0x8000bb8
 f loc.upload_x32 @ 0x8000c14
 
-.(func 0x08000e00 446 DFU_Req_GETSTATUS)
+.(dv 0x08000e00 Pointer)
+.(func 0x08000e04 482 DFU_Req_GETSTATUS)
 CCa 0x08000e0a STATE_dfuDNLOAD_SYNC
 CCa 0x08000e0e STATE_dfuMANIFEST_SYNC
 CCa 0x08000e46 CMD_ERASE
@@ -312,7 +313,6 @@ CCa 0x08002004 FLASH_FLAG_BSY
 # see usb_dcd.c
 
 .(func 0x08002088 150 DCD_Init)
-s 0x080021fc
 
 .(func 0x0800211e 90 DCD_EP_Close)
 .(func 0x08002178 70 DCD_EP_PrepareRx)
