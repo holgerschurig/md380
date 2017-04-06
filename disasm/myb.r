@@ -338,15 +338,87 @@ CCa 0x08002004 FLASH_FLAG_BSY
 .(func 0x08002f88 52 USB_OTG_EPClearStall)
 .(func 0x08002ff6 80 USB_OTG_EP0_OutStart)
 .(func 0x08003048 8 CPU_SR_Save_0)
+CCa 0x08003048 store current PRIMASK in r0
+CCa 0x0800304c disable IRQ via PRIMASK
 .(func 0x08003050 6 CPU_SR_Restore_)
 .(func 0x08003082 86 vec.PEND_SV)
 .(func 0x08003de8 210 otg_fs_int)
+.(func 0x080043f0 388 XXX_080043f0)
+.(d4 0x08005038 13)
+
+#############################################################################
+# see stm32f4xx.c
+
 .(func 0x0800506c 96 SystemInit)
+# Enable FPU
+CCa 0x0800506e access Coprozessor Access Control Register
+CCa 0x08005072 enable CP10 and CP11 coprocessors (FPU)
+# Set up PLL
+CCa 0x0800507e set HSION
+CCa 0x08005088 weird, reset value already 0x00000000
+CCa 0x08005092 unset PLLON, CSSON, HSEON
+CCa 0x0800509c weird, reset value already 0x24003010
+CCa 0x080050a2 unset HSEBYP
+CCa 0x080050ac weird, reset value already 0x00000000
+CCa 0x080050b0 delay loop
+# Set up vector table
+f VTOR @ 0xe000ed08
+CCa 0x080050c2 Vector Table Offset Register
+CCa 0x080050da set HSEON
+CCa 0x080050e6 check HSERDY
+CCa 0x080050fa HSE_STARTUP_TIMEOUT
+CCa 0x08005104 RCC_CR & RCC_CR_HSERDY) != RESET
+CCa 0x08005114 if (HSEStatus == 0x01)
+f RCC_RCC_APB1ENR @ 0x40023840
+CCa 0x0800511c set PWREN
+f RCC_RCC_APB1ENR @ 0x40023840
+CCa 0x08005128 set PWR_CR_VOS
+
 .(func 0x080050cc 202 SetSysClock)
+CCa 0x080055e4 set DN (Default NaN)
+CCa 0x080055e8 store in FPSCR
+
+# Enable "aa*", which needs a symbol named "entry0"
+f entry0 @ 0x080056a4
+.(func 0x080056a4 8 Reset_Handler)
+CCa 0x080056a4 this is SystemInit as thumb address
+CCa 0x080056a8 this is main as thumb address
+.(d4 0x080056ac 5)
+
+#############################################################################
+
+.(func 0x08005540 32 XXX_08005540)
+.(d4 0x08005560 2)
+.(func 0x08005636 4 store_1_in_r0)
+.(func 0x0800563a 14 XXX_0800563a)
+
+.(func 0x080056c0 16 main)
 .(func 0x080055d4 26 init_fpu)
+CCa 0x080055dc access CPACE
+CCa 0x080055de enable CP10 and CP11 coprocessors (FPU)
+
 .(func 0x08005620 26 main2)
-.(func 0x080056a4 8 vec.RESET)
-.(func 0x080056c0 16 main0)
+# Some table is at 0x800558c - 0x80055b8
+s 0x08005540
+af @ 0x08005540
+afvr r1 r1_ptr int
+afvr r4 r4_end int
+#e asm.emu=1
+#e asm.emuwrite=1
+#e io.cache=1
+
+.(d4 0x0800558c 11)
+.(d4 0x08005580 2)
+.(ds 0x080055b8 0x1c str.Radio_USB_Mode)
+.(ds 0x080055f0 0x14 str.Radio_Config)
+.(ds 0x08005608 0x18 str.Radio_Interface)
+.(ds 0x08005660 0x14 str.Anytone)
+.(ds 0x08005674 0x10 str.AnyRoad)
+.(ds 0x08005684 0x10 str.00000000010B)
+.(ds 0x08005694 0x10 str.00000000010C)
+.(ds 0x080054f0 40 str.SPI_Flash_Memory1)
+.(ds 0x08005518 40 str.SPI_Flash_Memory2)
+
 
 #############################################################################
 #
@@ -356,7 +428,6 @@ CCa 0x08002004 FLASH_FLAG_BSY
 # The vectors are described in the PM chapter 12.2
 
 .(d4 0x08000000 98)
-f vec.RESET @ 0x080056a4
 f vec.NMI @ 0x080054b8
 f vec.HARD_FAULT @ 0x080054ba
 f vec.MEM_MANAGE @ 0x080054bc
@@ -463,6 +534,7 @@ f vec.FPU @ 0x08005834
 .(d4 0x0800135c 2)
 .(d4 0x080018ac 5)
 .(d4 0x08001df0 26)
+.(d4 0x08002038 10)
 .(d4 0x08002330 1)
 .(d4 0x08002990 2)
 .(d4 0x080030d8 9)
@@ -475,50 +547,13 @@ f vec.FPU @ 0x08005834
 .(d4 0x08004970 16)
 .(d4 0x08004a6c 10)
 .(d4 0x08004ae4 1)
-.(d4 0x08005038 13)
-.(d4 0x8002038 10)
-CCa 0x08003048 store current PRIMASK in r0
-CCa 0x0800304c disable IRQ via PRIMASK
-
-# CCa 0x0800506c see stm/system_stm32f4xx.c
-# # Enable FPU
-# CCa 0x0800506e access Coprozessor Access Control Register
-# CCa 0x08005072 enable CP10 and CP11 coprocessors (FPU)
-# # Set up PLL
-# CCa 0x0800507e set HSION
-# CCa 0x08005088 weird, reset value already 0x00000000
-# CCa 0x08005092 unset PLLON, CSSON, HSEON
-# CCa 0x0800509c weird, reset value already 0x24003010
-# CCa 0x080050a2 unset HSEBYP
-# CCa 0x080050ac weird, reset value already 0x00000000
-# CCa 0x080050b0 delay loop
-# # Set up vector table
-# f VTOR @ 0xe000ed08
-# CCa 0x080050c2 Vector Table Offset Register
-# .(d4 0x08005198 76)
-# .(d4 0x080054d4 1)
-# .(d4 0x080056ac 5)
-# .(ds 0x080054f0 40 str.SPI_Flash_Memory1)
-# .(ds 0x08005518 40 str.SPI_Flash_Memory2)
-# CCa 0x080055dc access CPACE
-# CCa 0x080055de enable CP10 and CP11 coprocessors (FPU)
-# CCa 0x080055e4 set DN (Default NaN)
-# CCa 0x080055e8 store in FPSCR
-# #afvs 0 HSEStatus int
-# #afvs 4 StartUpCounter qint
-# CCa 0x080050da set HSEON
-# CCa 0x080050e6 check HSERDY
-# CCa 0x080050fa HSE_STARTUP_TIMEOUT
-# CCa 0x08005104 RCC_CR & RCC_CR_HSERDY) != RESET
-# CCa 0x08005114 if (HSEStatus == 0x01)
-# f RCC_RCC_APB1ENR @ 0x40023840
-# CCa 0x0800511c set PWREN
-# f RCC_RCC_APB1ENR @ 0x40023840
-# CCa 0x08005128 set PWR_CR_VOS
+.(d4 0x08005198 76)
+.(d4 0x080054d4 1)
+.(d4 0x080056ac 5)
 
 
-# Enable "aa*"
-f entry0 @ vec.RESET
+
 aa*
 
-Vp
+#Vp
+#pd 200
