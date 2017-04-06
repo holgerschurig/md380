@@ -98,9 +98,10 @@ doc:: doc/STM32Cube_UM1734_USB_Device_Library.pdf
 doc/STM32Cube_UM1734_USB_Device_Library.pdf:
 	mkdir -p doc
 	wget -O $@ -c http://www.st.com/resource/en/user_manual/dm00108129.pdf
-doc:: doc/UC-OS-III.pdf
-doc/UC-OS-III.pdf:
-	wget -O $@ -c https://presentations.inxpo.com/Shows/UBM/EETimes/STMicroelectronics/12-10/Booths/Micrium/100-uCOS-III-ST-STM32-002.pdf
+doc:: doc/UC-OS-II.pdf
+doc/UC-OS-II.pdf:
+	mkdir -p doc
+	wget -O $@ -c https://doc.micrium.com/download/attachments/10753158/100-uC-OS-II-002.pdf
 
 # Misc
 doc:: doc/CS8x0_Service_Manual.pdf
@@ -199,16 +200,3 @@ prunertos:
 	rm -rf freertos/FreeRTOS/Source/portable/Softune
 	rm -rf freertos/FreeRTOS/Source/portable/Tasking
 	rm -rf freertos/FreeRTOS/Source/portable/WizC
-
-
-#############################################################################
-#
-#  µC/OS-III
-#
-#############################################################################
-
-# See for example https://github.com/HANDS-FREE/OpenRE how this might work out
-
-ucosiii: ucosiii/README.txt
-ucosiii/README.txt:
-	svn checkout https://svn.code.sf.net/p/stm32f103xe-ucosiii/svn/Trunk ucosiii

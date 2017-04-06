@@ -1,5 +1,6 @@
 /freertos
-/ucosiii
+/ucos
+/Micrium
 ?
 a.*
 /obj
@@ -21,5 +22,5 @@ a.*
 /doc/UMC4N*.pdf
 /doc/XC6204*.pdf
 /doc/hrc5000.pdf
-/doc/UC-OS-III.pdf
+/doc/UC-OS-II.pdf
 /README.html
