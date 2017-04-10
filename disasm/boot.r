@@ -5,7 +5,8 @@ e asm.arch = arm
 e asm.cpu = cortex
 e asm.bits = 16
 
-## Setup the other sections
+## Setup sections. Radara will normally get sections from ELF
+## images, but our boot.bin is a "pure" binary.
 S 0x08000000 0x08000000 0x0000c000 0x0000c000 boot  -r-x
 Sa arm 16 0x08000000
 S 0x10000000 0x10000000 0x00010000 0x00010000 TCRAM mrw
@@ -35,28 +36,34 @@ e io.va = true
 f entry0 @ 0x080056a4
 s boot
 e search.in = io.sections.exec
-# later you can try: aa* or (slower) aac
+# later you can try: "aa*" or (slower) "aac"
 
 # Generate signures with: ./make_ucos_sigs
 # . sig_ucos.r
 
 
 #############################################################################
+#
+# Some macros that allow me to format the source code a little bit nicer,
+# i.E. not have the definitions stagger around to much.
 
-# Define a function, optionally analyze it recursively and seek to it
-(func addr sz name,f sym.$2 $1 @ $0)
+# Define a functiona AND analyze it. Analyzation is a prereq for the the "pdf" command
+(func addr sz name,f sym.$2 $1 @ $0,af)
 
-# Define a data section and seek to it
+# Define things that reside in data parts of the image
 (d4 addr size,Cd 4 $1 @ $0)            # define 4-byte long word
 (ds addr len lbl,Cs $1 @ $0,f $2 @ $0) # define string
-(dv addr name,f $1 @ $0)                # define variable
+(dv addr name,f $1 @ $0)               # define variable
 
+
+#############################################################################
+# Load findings from the md380tools project:
 . bootloader.r
 
 
 
 #############################################################################
-# see core_cm4.c
+# see core_cm4.h
 
 .(d4 0x08000000 98)
 
