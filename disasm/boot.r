@@ -641,6 +641,7 @@ f FLASH_CR			@ 0x40023c10
 f FLASH_OPTCR		@ 0x40023c14
 f FLASH_OPTCR_RDP	@ 0x40023c15
 f AIRCR_VECTKEY_MASK @ 0x05fa0004
+f io_GPIOE @ 0x40021000
 
 
 #############################################################################
