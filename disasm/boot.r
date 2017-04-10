@@ -619,6 +619,7 @@ f vec.FPU @ 0x08005834
 .(dv 0x20001214 USBD_cfg_status)
 .(dv 0x20001218 MAL_Buffer)
 .(dv 0x2000122c DeviceState3)
+.(dv 0x20001208 usbd_dfu_Desc)
 
 
 #############################################################################
@@ -639,6 +640,7 @@ f FLASH_SR			@ 0x40023c0c
 f FLASH_CR			@ 0x40023c10
 f FLASH_OPTCR		@ 0x40023c14
 f FLASH_OPTCR_RDP	@ 0x40023c15
+f AIRCR_VECTKEY_MASK @ 0x05fa0004
 
 
 #############################################################################
