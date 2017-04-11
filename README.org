@@ -73,7 +73,9 @@ Similar devices:
 - [[http://www.st.com/content/st_com/en/products/microcontrollers/stm32-32-bit-arm-cortex-mcus/stm32f4-series.html?querycriteria=productId=SS1577][STM32F4]] processor series page at www.st.com
 - [[http://www.st.com/content/st_com/en/products/microcontrollers/stm32-32-bit-arm-cortex-mcus/stm32f4-series/stm32f405-415/stm32f405vg.html][STM43F405VG]] page at www.st.com
 - [[http://www.st.com/content/st_com/en/products/embedded-software/mcus-embedded-software/stm32-embedded-software/stm32cube-embedded-software/stm32cubef4.html][STCubeF4]] code examples
+- [[file:doc/Cortex-M4_TRM.pdf][Cortex M4 Technical Reference Manual]]
 
+(there are more links to PDF documents in the [[chips][list of used integrated circuits]])
 
 * Software setup [16%]
   - [X] get FreeRTOS to compile
@@ -105,9 +107,8 @@ Similar devices:
   * DMR
   * USB
 
-
 * Hardware details
-** Chips
+** <<chips>>List of used integrated circuits
 
 - DS: Data Sheet
 - RM: Reference Manual
@@ -261,7 +262,6 @@ Schematics page 3, top side of CPU
 | PD14          | LCD_D0           |     | [[lcd][LCD]]             |
 |---------------+------------------+-----+-----------------|
 
-
 ** <<lcd>>LCD
 
 - Maybe an [[http://www.ncsys.co.jp/webshop/GTV350MPZI04(ILI9481).pdf][ILI9481]]?
@@ -292,3 +292,68 @@ Schematics page 3, top side of CPU
 | 20 | DATA  | I   | [[PLL_DAT][PLL_DAT]] | SDI data                                          |
 | 22 | CLK   | I   | [[PLL_CLK][PLL_CLK]] | SDI clock                                         |
 |  I | nCS   | i   | [[PLL_CS][PLL_CS]]  | SDI, l-h transition stores clocked in data        |
+
+
+* Radare and the boot loader
+** Get radare
+#+BEGIN_EXAMPLE
+$ git clone --depth 1 https://github.com/radare/radare2
+#+END_EXAMPLE
+** (Re)Compile radare
+#+BEGIN_EXAMPLE
+$ cd radare
+$ git clean -fdx
+$ git pull
+$ sys/build.sh `pwd`/dist
+$ make symstall
+#+END_EXAMPLE
+
+I use a little helper script ...
+
+#+BEGIN_EXAMPLE
+#!/bin/sh
+LD_LIBRARY_PATH=
+for _FILE in /usr/src/radare2/libr/*/libr_*.so; do
+	_DIR=$(dirname "$_FILE")
+	if [ -z "$LD_LIBRARY_PATH" ]; then
+		LD_LIBRARY_PATH="$_DIR"
+	else
+		LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$_DIR"
+	fi
+done
+export LD_LIBRARY_PATH
+
+_FILE="$(basename $0)"
+test "$_FILE" = "r2" && _FILE="radare2"
+
+/usr/src/radare2/binr/$_FILE/$_FILE $*
+#+END_EXAMPLE
+
+... that I link to "=~/bin/r2=", "=~/bin/r2pm=" and so on. That way I can
+have the always the newest radare from git and still don't pollute my
+"=/usr=" or "=/usr/local=" with it.
+
+** Use radare
+A dissambly subproject for the bootloader is in the subdirectory "=disasm/=":
+
+#+BEGIN_EXAMPLE
+cd disasm
+./disasm_boot.sh
+#+END_EXAMPLE
+
+Some commands that I use interactively in Radare2:
+
+| s n                  | seek around                                          |
+| /v 0xe000ed08        | search for data e000ed08                             |
+| /x 08ed00e0:ffff0000 | search for data e000xxxx                             |
+| pd 10 @ hit1_0       | show code around address                             |
+| af                   | analyze function                                     |
+| afr                  | analyze function recursively                         |
+| aa*                  | analzye all "flags" starting with sym.* and "entry0" |
+| aac                  | (slow) analyze all function calls                    |
+| f~fcn                | list functions that are still unnamed                |
+| V                    | enter visual mode, pP there to change display mode   |
+
+There are also a bunch of commands in the "=*.r=" files which I don't
+usually use interactively. Just look there directly.
+

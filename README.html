@@ -1,0 +1,1677 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tytera MD380 firmware experiments</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Holger Schurig, DH3HS" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  body { text-align: center; font-family: "Aria", sans-serif; }
+  #content { margin: 0 auto; width: 860px; text-align: left; }
+  #text-table-of-contents > ul > li { margin-top: 1em; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .WAIT, .DELE   { color: blue; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1em 0;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 8pt;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .ulClassNameOrID > li {}
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Tytera MD380 firmware experiments</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgcce9ba5">Introduction</a></li>
+<li><a href="#org115df87">Resources</a>
+<ul>
+<li><a href="#org917f88a">TYT MD380</a></li>
+<li><a href="#orga592c36">STM32F4</a></li>
+</ul>
+</li>
+<li><a href="#org6247a0f">Software setup <code>[16%]</code></a></li>
+<li><a href="#orgd2359a5">Hardware access <code>[0%]</code></a></li>
+<li><a href="#orgc0af941">Hardware details</a>
+<ul>
+<li><a href="#org97b7585">List of used integrated circuits</a></li>
+<li><a href="#org8389ef9">Processor</a></li>
+<li><a href="#org362fec2">LCD</a></li>
+<li><a href="#orgbd886aa">Frequency synthesizer</a></li>
+</ul>
+</li>
+<li><a href="#org2f40917">Radare and the boot loader</a>
+<ul>
+<li><a href="#org1bf3aed">Get radare</a></li>
+<li><a href="#org36fa800">(Re)Compile radare</a></li>
+<li><a href="#orgf1c3caa">Use radare</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgcce9ba5" class="outline-2">
+<h2 id="orgcce9ba5">Introduction</h2>
+<div class="outline-text-2" id="text-orgcce9ba5">
+<p>
+The code here is currently based on work from Pat Hickey, taken from
+<a href="https://github.com/pchickey/md380-re">https://github.com/pchickey/md380-re</a>.
+</p>
+
+<p>
+Goal: I want to write my own firmware for the MD380, similar to the
+<a href="https://github.com/pchickey/md380-re">md380-re</a> project. If I&rsquo;m successful, I actually want to be able to run
+this firmware :-)
+</p>
+
+<p>
+And, to get my feet wet a bit, i first want to understand the Tytera
+recovery bootloader, µC/OS and RTOS a bit.
+</p>
+
+<p>
+This document / git project is just an unsorted grab bag with my
+findings.
+</p>
+
+<p>
+Holger, DH3HS
+</p>
+</div>
+</div>
+
+<div id="outline-container-org115df87" class="outline-2">
+<h2 id="org115df87">Resources</h2>
+<div class="outline-text-2" id="text-org115df87">
+</div><div id="outline-container-org917f88a" class="outline-3">
+<h3 id="org917f88a">TYT MD380</h3>
+<div class="outline-text-3" id="text-org917f88a">
+<p>
+Reverse engineering:
+</p>
+
+<ul class="org-ul">
+<li><a href="doc/Reverse_Engineering_the_Tytera_MD380.pdf">Reverse Engineering the Tytera MD380</a>, a local copy of the relevant
+pages from the original <a href="https://www.alchemistowl.org/pocorgtfo/pocorgtfo10.pdf">PoC GTFO #10</a> paper.</li>
+<li><a href="https://www.youtube.com/embed/cE4f6JaBfSI?autoplay=1&amp;auto_play=true">Reverse-engineering a Digital Two-way radio</a> talk on Youtube, pretty
+much the same as the PDF. It however emphasizes on the XOR
+encryption of the images in the last quarter.</li>
+<li>The <a href="https://nullcon.net/website/archives/ppt/goa-16/Great-Ideas-in-Reversing-the-Tytera-MD380-by-Travis-Goodspeed.pdf">slides</a> used in this talk contain additional information.</li>
+</ul>
+
+<p>
+Radio manuals:
+</p>
+
+<ul class="org-ul">
+<li><a href="http://www.grapevineamateurradio.com/downloads/md-380-manual.pdf">MD-380 english manual</a></li>
+<li><a href="http://www.darc.de/fileadmin/filemounts/distrikte/q/Codeplugs/Kurzanleitung_zum_Tytera_MD-380_-_Retevis_RT-3.pdf">german manual</a> from DG9VH</li>
+<li>Full <a href="http://www.pc5e.nl/downloads/md380/documents/MD-380UHF-RF-schematic.pdf">schematics</a>, not just the 2 pages at the end of the PoCG paper</li>
+</ul>
+
+<p>
+Grab bags:
+</p>
+
+<ul class="org-ul">
+<li><a href="http://md380.blogspot.de/2015/06/tytera-md380-usb-to-cable-pinout-diagram.html">USB cable pinout</a> from VE3WZW</li>
+<li>Format of the test <a href="http://rctnotes.blogspot.de/2016/02/structure-of-tytera-md-380-test-radio.html">calibration data</a></li>
+
+<li>various <a href="http://www.qsl.net/kb9mwr/projects/dv/dmr/">resources</a> from KB9MWR</li>
+<li>various <a href="http://www.qsl.net/dl4yhf/RT3/">resources</a> from DL4YHF</li>
+
+<li><a href="https://www.dg9vh.de/tag/tyt-md-380/">german blog posts</a> from DG9VH</li>
+<li><a href="https://www.darc-saar.de/moziloCMS/Relais/Digital_Voice.html">DARC Saarland</a> has also a good amount of (german language) resources</li>
+<li>MD380tools <a href="https://github.com/travisgoodspeed/md380tools">https://github.com/travisgoodspeed/md380tools</a> GitHub project</li>
+<li>MD380tools <a href="https://groups.google.com/forum/#!forum/md380tools">Google groups</a> channel</li>
+<li>Hashtag <a href="https://twitter.com/hashtag/md380?src=hash">#md380</a> on Twitter</li>
+</ul>
+
+<p>
+Random twitter channels:
+</p>
+
+<ul class="org-ul">
+<li><a href="https://twitter.com/dd4cr">DD4CR</a></li>
+<li><a href="https://twitter.com/travisgoodspeed">Travis Goodspeed</a></li>
+</ul>
+
+<p>
+About AMBE+ encoding/decoding
+</p>
+
+<ul class="org-ul">
+<li><a href="http://github-com/szechyjs/dsd">http://github-com/szechyjs/dsd</a> can decode AMBE+</li>
+<li><a href="https://www.exploit-db.com/docs/pocorgtfo13.pdf">Decoding AMBE+ in MD380 Firmware</a> in Linux, in PoC GTFO #13.</li>
+</ul>
+
+
+<p>
+Similar devices:
+</p>
+
+<ul class="org-ul">
+<li><a href="http://www.connectsystems.com/software/CS810_documents/CS800%20Service%20Manual.pdf">Connect Systems CS8x0 Service Manual</a></li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-orga592c36" class="outline-3">
+<h3 id="orga592c36">STM32F4</h3>
+<div class="outline-text-3" id="text-orga592c36">
+<ul class="org-ul">
+<li><a href="http://www.st.com/content/st_com/en/products/microcontrollers/stm32-32-bit-arm-cortex-mcus/stm32f4-series.html?querycriteria=productId=SS1577">STM32F4</a> processor series page at www.st.com</li>
+<li><a href="http://www.st.com/content/st_com/en/products/microcontrollers/stm32-32-bit-arm-cortex-mcus/stm32f4-series/stm32f405-415/stm32f405vg.html">STM43F405VG</a> page at www.st.com</li>
+<li><a href="http://www.st.com/content/st_com/en/products/embedded-software/mcus-embedded-software/stm32-embedded-software/stm32cube-embedded-software/stm32cubef4.html">STCubeF4</a> code examples</li>
+<li><a href="doc/Cortex-M4_TRM.pdf">Cortex M4 Technical Reference Manual</a></li>
+</ul>
+
+<p>
+(there are more links to PDF documents in the <a href="#org5f18da3">list of used integrated circuits</a>)
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6247a0f" class="outline-2">
+<h2 id="org6247a0f">Software setup <code>[16%]</code></h2>
+<div class="outline-text-2" id="text-org6247a0f">
+<ul class="org-ul">
+<li class="on"><code>[X]</code> get FreeRTOS to compile</li>
+<li class="off"><code>[&#xa0;]</code> add infrastructore to wrap &amp; flash it</li>
+<li class="off"><code>[&#xa0;]</code> let the app interact</li>
+<li class="off"><code>[&#xa0;]</code> add USB support</li>
+<li class="off"><code>[&#xa0;]</code> add syslog</li>
+<li class="off"><code>[&#xa0;]</code> add memory access</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgd2359a5" class="outline-2">
+<h2 id="orgd2359a5">Hardware access <code>[0%]</code></h2>
+<div class="outline-text-2" id="text-orgd2359a5">
+<ul class="org-ul">
+<li>Buttons
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> detect buttons</li>
+<li class="off"><code>[&#xa0;]</code> detect long / short presses</li>
+</ul></li>
+<li>LED
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> direct output</li>
+<li class="off"><code>[&#xa0;]</code> PWM output</li>
+</ul></li>
+<li>Backlight
+<ul class="org-ul">
+<li class="off"><code>[&#xa0;]</code> direct output</li>
+<li class="off"><code>[&#xa0;]</code> PWM output</li>
+</ul></li>
+<li>Volume - Button</li>
+<li>Power off</li>
+<li>Channel</li>
+<li><a href="#orgdbf5b0f">LCD</a></li>
+<li><a href="#org5eb639d">Frequency synthesizer</a></li>
+<li>FM</li>
+<li>DMR</li>
+<li>USB</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgc0af941" class="outline-2">
+<h2 id="orgc0af941">Hardware details</h2>
+<div class="outline-text-2" id="text-orgc0af941">
+</div><div id="outline-container-org97b7585" class="outline-3">
+<h3 id="org97b7585"><a id="org5f18da3"></a>List of used integrated circuits</h3>
+<div class="outline-text-3" id="text-org97b7585">
+<ul class="org-ul">
+<li>DS: Data Sheet</li>
+<li>RM: Reference Manual</li>
+<li>PM: Programming Manual</li>
+</ul>
+
+<p>
+These chips are used in the <a href="http://www.pc5e.nl/downloads/md380/documents/MD-380UHF-RF-schematic.pdf">schematics</a>:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Chip</th>
+<th scope="col" class="org-left">Type</th>
+<th scope="col" class="org-left">Usage</th>
+<th scope="col" class="org-left">Local PDFs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">U101<a id="orgf8e2df1"></a></td>
+<td class="org-left">NJM2902V</td>
+<td class="org-left">Quad OpAmp, AF_OUT to <a href="#orgea12f72">QT_DQT_IN</a></td>
+<td class="org-left"><a href="doc/NJM2902_OpAmp.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U102<a id="org78dd702"></a></td>
+<td class="org-left">NJM2902V</td>
+<td class="org-left">Quad OpAmp, AF_OUT to <a href="#org5f24711">2T/5T</a> and VOL_OUT</td>
+<td class="org-left"><a href="doc/NJM2902_OpAmp.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U103<a id="orgee4c843"></a></td>
+<td class="org-left">NJM2100V</td>
+<td class="org-left">Dual OpAmp for Microphone, also  <a href="#org356540f">VOX</a></td>
+<td class="org-left"><a href="doc/NJM2100_OpAmp.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U104<a id="org9d02a65"></a></td>
+<td class="org-left">UMC4N</td>
+<td class="org-left">Switch, 5R_A from <a href="#orge0263de">FM_SW</a> for <a href="#orgf8e2df1">U101</a></td>
+<td class="org-left"><a href="doc/UMC4N_Power_Transistor.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U105</td>
+<td class="org-left">XC6204B502MR</td>
+<td class="org-left">LDO regulator, MIC_5V for <a href="#orgee4c843">U103</a> by <a href="#orgc3923df">MICPWR_SW</a></td>
+<td class="org-left"><a href="doc/XC6204_PMIC.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U201<a id="org5e2072d"></a></td>
+<td class="org-left">HR_C5000</td>
+<td class="org-left">Digital Baseband</td>
+<td class="org-left"><a href="doc/hrc5000.pdf">chinese</a>, <a href="http://www.qsl.net/dl4yhf/RT3/HR_C5000_english.html">english</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U202</td>
+<td class="org-left">missing</td>
+<td class="org-left">not in schema</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">U203</td>
+<td class="org-left">TC75S51F</td>
+<td class="org-left">Single OpAmp, LINEOUT towards VOL_OUT</td>
+<td class="org-left"><a href="doc/TC75S51F_OpAmp.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U204</td>
+<td class="org-left">TDA2822D</td>
+<td class="org-left">Audio amplifier, VOL_OUT towards speaker</td>
+<td class="org-left"><a href="doc/TDA2822D_Audio_Amplifier.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U301</td>
+<td class="org-left">STM32F405VGT6</td>
+<td class="org-left"><a href="#org979744a">MCU</a></td>
+<td class="org-left"><a href="doc/STM32F405_Reference_Manual.pdf">RM</a>, <a href="doc/STM32F405_Programming_Manual.pdf">PM</a>, <a href="doc/STM32F405.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U302</td>
+<td class="org-left">W25Q128FVSIG</td>
+<td class="org-left">Flash</td>
+<td class="org-left"><a href="doc/W15Q128FV_Flash">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U303</td>
+<td class="org-left">PST9124</td>
+<td class="org-left">MCU and C59000 reset circuit</td>
+<td class="org-left"><a href="doc/PST9124_Reset.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U303</td>
+<td class="org-left">missing</td>
+<td class="org-left">not in schema</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">U305</td>
+<td class="org-left">nc?</td>
+<td class="org-left">Flash</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">U307</td>
+<td class="org-left">HR_V3000S</td>
+<td class="org-left">ALPU AES key chip?</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">U401</td>
+<td class="org-left">LM2734X</td>
+<td class="org-left">Buck converter for &ldquo;3V3&rdquo;</td>
+<td class="org-left"><a href="doc/LM2734X_Buck_Converter.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U402</td>
+<td class="org-left">XC6204B502MR</td>
+<td class="org-left">LDO regulator for &ldquo;5T&rdquo;</td>
+<td class="org-left"><a href="doc/XC6204_PMIC.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U403</td>
+<td class="org-left">XC6204B502MR</td>
+<td class="org-left">LDO regulator for &ldquo;5R&rdquo;</td>
+<td class="org-left"><a href="doc/XC6204_PMIC.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U404</td>
+<td class="org-left">XC6204B502MR</td>
+<td class="org-left">LDO regulator for &ldquo;5C&rdquo;</td>
+<td class="org-left"><a href="doc/XC6204_PMIC.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U405</td>
+<td class="org-left">nc?</td>
+<td class="org-left">nc, from BAT+ to BACK3V3</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">U501</td>
+<td class="org-left">GT3136</td>
+<td class="org-left">Receiver, LO, IF Amp, Lim, Demod</td>
+<td class="org-left"><a href="doc/GT3136_Detector.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U502<a id="orgc2ee124"></a></td>
+<td class="org-left">NJM2904V</td>
+<td class="org-left">Double OpAmp</td>
+<td class="org-left"><a href="doc/NRM2904_OpAmp.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U503</td>
+<td class="org-left">UMC4N</td>
+<td class="org-left">Switch, DMR_VCC for <a href="#org5e2072d">U201</a> via <a href="#org1dbf87b">DMR_SW</a></td>
+<td class="org-left"><a href="doc/UMC4N_Power_Transistor.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U504</td>
+<td class="org-left">missing</td>
+<td class="org-left">not in schema</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">U505<a id="org09d0968"></a></td>
+<td class="org-left">UMC4N</td>
+<td class="org-left">Swtch, APT/TV for <a href="#org09d0968">U505</a> via <a href="#orgb2aebf8">RF_APC_SW</a></td>
+<td class="org-left"><a href="doc/UMC4N_Power_Transistor.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U601</td>
+<td class="org-left">SKY72310</td>
+<td class="org-left">Frequency Synthesizer</td>
+<td class="org-left"><a href="doc/SKY72310_Frequency_Synthesizer.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U602</td>
+<td class="org-left">XC6204B332MR</td>
+<td class="org-left">LDO Regulator for &ldquo;PLL3V3&rdquo;</td>
+<td class="org-left"><a href="doc/XC6204_PMIC.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U603</td>
+<td class="org-left">NJM2904V</td>
+<td class="org-left">Single OpAmp</td>
+<td class="org-left"><a href="doc/NRM2904_OpAmp.pdf">DS</a></td>
+</tr>
+
+<tr>
+<td class="org-left">U604</td>
+<td class="org-left">UMC4N</td>
+<td class="org-left">Switch, RX_VCOVCC via <a href="#org05d85c0">VCOVCC_SW</a></td>
+<td class="org-left"><a href="doc/UMC4N_Power_Transistor.pdf">DS</a></td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">-</td>
+<td class="org-left">ILI9481 ?</td>
+<td class="org-left">LCD panel</td>
+<td class="org-left"><a href="doc/ILI9481_LCD_Display.pdf">DS</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<div id="outline-container-org8389ef9" class="outline-3">
+<h3 id="org8389ef9"><a id="org979744a"></a>Processor</h3>
+<div class="outline-text-3" id="text-org8389ef9">
+<p>
+Schematics page 3, left side of CPU
+</p>
+
+<p>
+Note: the `CS8x0: &ldquo;blah&rdquo;&rsquo; texts denote the signal description from the
+CS 8x0 Service manual. They might be wrong or misleading, especially
+the active high/low notations. But they give an additional hint &#x2026;
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Processor pin</th>
+<th scope="col" class="org-left">Signal</th>
+<th scope="col" class="org-left">Dir</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">PA10</td>
+<td class="org-left">DMR_SW<a id="org1dbf87b"></a></td>
+<td class="org-left">I</td>
+<td class="org-left">CS8x0: &ldquo;DMR Receive IF Switch(High Active)&rdquo;</td>
+</tr>
+
+<tr>
+<td class="org-left">PA9</td>
+<td class="org-left">VCOVCC_SW<a id="org05d85c0"></a></td>
+<td class="org-left">O?</td>
+<td class="org-left">CS8x0: &ldquo;RXVCO/TXVCO Control(High for RX)&rdquo;</td>
+</tr>
+
+<tr>
+<td class="org-left">PB11</td>
+<td class="org-left">ECN3</td>
+<td class="org-left">I?</td>
+<td class="org-left">encoder switch, probably for the channel</td>
+</tr>
+
+<tr>
+<td class="org-left">PB10</td>
+<td class="org-left">ECN2</td>
+<td class="org-left">I?</td>
+<td class="org-left">encoder</td>
+</tr>
+
+<tr>
+<td class="org-left">PE15</td>
+<td class="org-left">ECN1</td>
+<td class="org-left">I?</td>
+<td class="org-left">encoder</td>
+</tr>
+
+<tr>
+<td class="org-left">PE14</td>
+<td class="org-left">ENC0</td>
+<td class="org-left">I?</td>
+<td class="org-left">encoder</td>
+</tr>
+
+<tr>
+<td class="org-left">PE13</td>
+<td class="org-left">FM_MUTE</td>
+<td class="org-left">O</td>
+<td class="org-left">mutes AF_OUT, VOL_OUT, 2T/5T, CS8x0: &ldquo;FM RX Mute(High Active)&rdquo;</td>
+</tr>
+
+<tr>
+<td class="org-left">PE12</td>
+<td class="org-left">EXT_PTT</td>
+<td class="org-left">I?</td>
+<td class="org-left">3.5mm jack shield</td>
+</tr>
+
+<tr>
+<td class="org-left">PE11</td>
+<td class="org-left">PTT_KEY</td>
+<td class="org-left">I</td>
+<td class="org-left">hardware PTT key</td>
+</tr>
+
+<tr>
+<td class="org-left">PE10</td>
+<td class="org-left">LCD_D7</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><a href="#orgdbf5b0f">LCD</a></td>
+</tr>
+
+<tr>
+<td class="org-left">PE9</td>
+<td class="org-left">LCD_D6</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><a href="#orgdbf5b0f">LCD</a></td>
+</tr>
+
+<tr>
+<td class="org-left">PE8</td>
+<td class="org-left">LCD_D5</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><a href="#orgdbf5b0f">LCD</a></td>
+</tr>
+
+<tr>
+<td class="org-left">PE7</td>
+<td class="org-left">LCD_D4</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><a href="#orgdbf5b0f">LCD</a></td>
+</tr>
+
+<tr>
+<td class="org-left">PB2</td>
+<td class="org-left">FM_SW<a id="orge0263de"></a></td>
+<td class="org-left">O</td>
+<td class="org-left">CS8x0: &ldquo;FM Receive IF Switch(High Active)&rdquo;</td>
+</tr>
+
+<tr>
+<td class="org-left">PB1</td>
+<td class="org-left">BUSY</td>
+<td class="org-left">I</td>
+<td class="org-left">GT3136, CS8x0: &ldquo;Carrier Detect Input&rdquo;</td>
+</tr>
+
+<tr>
+<td class="org-left">PB0</td>
+<td class="org-left">RSSI</td>
+<td class="org-left">I?</td>
+<td class="org-left">GT3136, CS8x0: &ldquo;RSSI Detect Input&rdquo;</td>
+</tr>
+
+<tr>
+<td class="org-left">PC5</td>
+<td class="org-left">5TC</td>
+<td class="org-left">O</td>
+<td class="org-left">PMIC XC6204, controls signal &ldquo;5T&rdquo;</td>
+</tr>
+
+<tr>
+<td class="org-left">PC4</td>
+<td class="org-left">RF_APC_SW<a id="orgb2aebf8"></a></td>
+<td class="org-left">O</td>
+<td class="org-left">M2904 OPAMP, CS8x0: &ldquo;RF Amplifier Switch(High Active)&rdquo;</td>
+</tr>
+
+<tr>
+<td class="org-left">PA7</td>
+<td class="org-left">POW_C</td>
+<td class="org-left">O</td>
+<td class="org-left">control BAT7V5, maybe used for power off</td>
+</tr>
+
+<tr>
+<td class="org-left">PA6</td>
+<td class="org-left">K1</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">keypad?</td>
+</tr>
+
+<tr>
+<td class="org-left">PA5</td>
+<td class="org-left">MOD2_BIAS</td>
+<td class="org-left">O</td>
+<td class="org-left">CS8x0: &ldquo;TCXO Frequency D/A Adjust&rdquo;</td>
+</tr>
+
+<tr>
+<td class="org-left">PA4</td>
+<td class="org-left">APC/TV</td>
+<td class="org-left">O</td>
+<td class="org-left">M2904 OPAMP, sender? CS8x0: &ldquo;APC/TV D/A Output&rdquo;</td>
+</tr>
+
+<tr>
+<td class="org-left">PA3</td>
+<td class="org-left">VOX<a id="org356540f"></a></td>
+<td class="org-left">I</td>
+<td class="org-left">from microphone integrator</td>
+</tr>
+
+<tr>
+<td class="org-left">PA2</td>
+<td class="org-left">QT_DQT_IN<a id="orgea12f72"></a></td>
+<td class="org-left">I</td>
+<td class="org-left">audio output from <a href="#orgf8e2df1">U101</a>, switched by <a href="#orge0263de">FM_SW</a></td>
+</tr>
+
+<tr>
+<td class="org-left">PA13</td>
+<td class="org-left">W/N_SW</td>
+<td class="org-left">O</td>
+<td class="org-left">wide/narrow switch?</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>
+Schematics page 3, bottom side of CPU
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Processor pin</th>
+<th scope="col" class="org-left">Signal</th>
+<th scope="col" class="org-left">Dir</th>
+<th scope="col" class="org-left">Notes</th>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">&#xa0;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">PA8</td>
+<td class="org-left">SAVE</td>
+<td class="org-left">O</td>
+<td class="org-left">PMIC XC6204, control signal &ldquo;5V&rdquo;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PC9</td>
+<td class="org-left">5RC</td>
+<td class="org-left">O</td>
+<td class="org-left">PMIC XC6204, control signal &ldquo;5R&rdquo;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PC8</td>
+<td class="org-left">BEEP</td>
+<td class="org-left">O</td>
+<td class="org-left">goes to VOL_OUT,  2T/5T, DTMF_OUT, CS8x0: &ldquo;BEEP/ALARM/DTMF Output&rdquo;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PC7</td>
+<td class="org-left">CTC/DCS_OUT</td>
+<td class="org-left">O</td>
+<td class="org-left">M2904 OPAMP, CS8x0: &ldquo;CTCSS/DCS TCXO Output&rdquo;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PC6</td>
+<td class="org-left">LCD_LAMP</td>
+<td class="org-left">O</td>
+<td class="org-left"><a href="#orgdbf5b0f">LCD</a> backlight</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PD15</td>
+<td class="org-left">LCD_D1</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><a href="#orgdbf5b0f">LCD</a></td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PA1</td>
+<td class="org-left">BAT</td>
+<td class="org-left">I?</td>
+<td class="org-left">maybe to measure the battery power</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PA0</td>
+<td class="org-left">TX_LED</td>
+<td class="org-left">O</td>
+<td class="org-left">red</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PC3</td>
+<td class="org-left">2T/5T<a id="org5f24711"></a></td>
+<td class="org-left">I</td>
+<td class="org-left">HR C5000, CS8x0: &ldquo;2T/5T data input&rdquo;, this is AF_OFOUT amplified <a href="#org78dd702">U102</a></td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PC2</td>
+<td class="org-left">RF_TX_INTER</td>
+<td class="org-left">I?</td>
+<td class="org-left">HR C5000</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PC1</td>
+<td class="org-left">SYS_INTER</td>
+<td class="org-left">I?</td>
+<td class="org-left">HR C5000</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PC0</td>
+<td class="org-left">TIME_SLOT_INTER</td>
+<td class="org-left">I?</td>
+<td class="org-left">HR C5000</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PC15</td>
+<td class="org-left">OSC32_OUT</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PC14</td>
+<td class="org-left">OSC_32IN</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PC13</td>
+<td class="org-left">BSHIFT</td>
+<td class="org-left">O</td>
+<td class="org-left">goes to 8MHz quartz</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PE5</td>
+<td class="org-left">PLL_DAT<a id="org882b44b"></a>, DMR_SDI</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">SKY72310 DATA, HR C5000 U_SDI</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PE4</td>
+<td class="org-left">DMR_SDO</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">HR C5000 U_SDO</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PE3</td>
+<td class="org-left">DMR_SCL, PLL_CLK<a id="org1469754"></a></td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">HR C5000 U_SCLK, HR C5000 CLK</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PE2</td>
+<td class="org-left">DMR_CS</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">HR C5000 U_CS</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PE6</td>
+<td class="org-left">DMR_SLEEP</td>
+<td class="org-left">O?</td>
+<td class="org-left">HR C5000 PWD, CS8x0: &ldquo;DMR POWERDOWN(High Active)&rdquo;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>
+Schematics page 3, right side of CPU
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Processor pin</th>
+<th scope="col" class="org-left">Signal</th>
+<th scope="col" class="org-left">Dir</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">PA14</td>
+<td class="org-left">MICPWR_SW<a id="orgc3923df"></a></td>
+<td class="org-left">O</td>
+<td class="org-left">PMIC XC6204, control signal &ldquo;MIC_5V&rdquo;, CS8x0: &ldquo;MIC Power Switch(High Active)&rdquo;</td>
+</tr>
+
+<tr>
+<td class="org-left">PA15</td>
+<td class="org-left">I2S_FS</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">HR C5000 C_CS</td>
+</tr>
+
+<tr>
+<td class="org-left">PC10</td>
+<td class="org-left">I2S_CK</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">HR C5000 C_SCLK</td>
+</tr>
+
+<tr>
+<td class="org-left">PC11</td>
+<td class="org-left">I2S_RX</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">HR C5000 C_SDI</td>
+</tr>
+
+<tr>
+<td class="org-left">PC12</td>
+<td class="org-left">I2S_TX</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">HR C5000 C_SDO</td>
+</tr>
+
+<tr>
+<td class="org-left">PD0</td>
+<td class="org-left">LCD_D2</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><a href="#orgdbf5b0f">LCD</a></td>
+</tr>
+
+<tr>
+<td class="org-left">PD1</td>
+<td class="org-left">LCD_D3</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><a href="#orgdbf5b0f">LCD</a></td>
+</tr>
+
+<tr>
+<td class="org-left">PD2</td>
+<td class="org-left">K2</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">keypad?</td>
+</tr>
+
+<tr>
+<td class="org-left">PD3</td>
+<td class="org-left">K3</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">keypad?</td>
+</tr>
+
+<tr>
+<td class="org-left">PD4</td>
+<td class="org-left">LCD_RD</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><a href="#orgdbf5b0f">LCD</a></td>
+</tr>
+
+<tr>
+<td class="org-left">PD5</td>
+<td class="org-left">LCD_WR</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><a href="#orgdbf5b0f">LCD</a></td>
+</tr>
+
+<tr>
+<td class="org-left">PD6</td>
+<td class="org-left">LCD_CS</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><a href="#orgdbf5b0f">LCD</a></td>
+</tr>
+
+<tr>
+<td class="org-left">PD7</td>
+<td class="org-left">FLASH_CS</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">W25Q128FVSIG CSN</td>
+</tr>
+
+<tr>
+<td class="org-left">PB3</td>
+<td class="org-left">FLASH_SCLK</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">W25Q128FVSIG SCK</td>
+</tr>
+
+<tr>
+<td class="org-left">PB4</td>
+<td class="org-left">FLASH_SDO</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">W25Q128FVSIG SO</td>
+</tr>
+
+<tr>
+<td class="org-left">PB5</td>
+<td class="org-left">FLASH_SDI</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">W25Q128FVSIG SI</td>
+</tr>
+
+<tr>
+<td class="org-left">PB6</td>
+<td class="org-left">SCL</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">HR V3000S, ALPU AES key chip?</td>
+</tr>
+
+<tr>
+<td class="org-left">PB7</td>
+<td class="org-left">SDA</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">HR V3000S, ALPU AES key chip?</td>
+</tr>
+
+<tr>
+<td class="org-left">PB8</td>
+<td class="org-left">SPK_C</td>
+<td class="org-left">O</td>
+<td class="org-left">speaker mute?</td>
+</tr>
+
+<tr>
+<td class="org-left">PB9</td>
+<td class="org-left">AFCO</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">PE0</td>
+<td class="org-left">RX_LED</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">green</td>
+</tr>
+
+<tr>
+<td class="org-left">PE1</td>
+<td class="org-left">nc</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">nc</td>
+</tr>
+
+<tr>
+<td class="org-left">PA11</td>
+<td class="org-left">USB_D-</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">USB</td>
+</tr>
+
+<tr>
+<td class="org-left">PA12</td>
+<td class="org-left">USB_D+</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">USB</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>
+Schematics page 3, top side of CPU
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Processor pin</th>
+<th scope="col" class="org-left">Signal</th>
+<th scope="col" class="org-left">Dir</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">PB12</td>
+<td class="org-left">V_CS</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">HR C5000 V_CS</td>
+</tr>
+
+<tr>
+<td class="org-left">PB13</td>
+<td class="org-left">V_SCLK</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">HR C5000 V_SCLK</td>
+</tr>
+
+<tr>
+<td class="org-left">PB14</td>
+<td class="org-left">V_SDO</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">HR C5000 V_SDO</td>
+</tr>
+
+<tr>
+<td class="org-left">PB15</td>
+<td class="org-left">V_SDI</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">HR C5000 V_SDI</td>
+</tr>
+
+<tr>
+<td class="org-left">PD8</td>
+<td class="org-left">FLASH_CS1</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">nc?</td>
+</tr>
+
+<tr>
+<td class="org-left">PD9</td>
+<td class="org-left">FLASH_CS2</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">nc?</td>
+</tr>
+
+<tr>
+<td class="org-left">PD10</td>
+<td class="org-left">PLL_LD<a id="orgdb8c464"></a></td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">SKY72310 PS</td>
+</tr>
+
+<tr>
+<td class="org-left">PD11</td>
+<td class="org-left">PLL_CS<a id="org489c70a"></a></td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">SKY72310 /CS</td>
+</tr>
+
+<tr>
+<td class="org-left">PD12</td>
+<td class="org-left">LCD_RS</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><a href="#orgdbf5b0f">LCD</a></td>
+</tr>
+
+<tr>
+<td class="org-left">PD13</td>
+<td class="org-left">LCD_RST</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><a href="#orgdbf5b0f">LCD</a></td>
+</tr>
+
+<tr>
+<td class="org-left">PD14</td>
+<td class="org-left">LCD_D0</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><a href="#orgdbf5b0f">LCD</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org362fec2" class="outline-3">
+<h3 id="org362fec2"><a id="orgdbf5b0f"></a>LCD</h3>
+<div class="outline-text-3" id="text-org362fec2">
+<ul class="org-ul">
+<li>Maybe an <a href="http://www.ncsys.co.jp/webshop/GTV350MPZI04(ILI9481).pdf">ILI9481</a>?</li>
+</ul>
+
+<table border="2" cellspacing="0" cellpadding="6">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Signal</th>
+<th scope="col" class="org-left">Processor pin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">LCD_D0</td>
+<td class="org-left">PD14</td>
+</tr>
+
+<tr>
+<td class="org-left">LCD_D1</td>
+<td class="org-left">PD15</td>
+</tr>
+
+<tr>
+<td class="org-left">LCD_D2</td>
+<td class="org-left">PD0</td>
+</tr>
+
+<tr>
+<td class="org-left">LCD_D3</td>
+<td class="org-left">PD1</td>
+</tr>
+
+<tr>
+<td class="org-left">LCD_D4</td>
+<td class="org-left">PE7</td>
+</tr>
+
+<tr>
+<td class="org-left">LCD_D5</td>
+<td class="org-left">PE8</td>
+</tr>
+
+<tr>
+<td class="org-left">LCD_D6</td>
+<td class="org-left">PE9</td>
+</tr>
+
+<tr>
+<td class="org-left">LCD_D7</td>
+<td class="org-left">PE10</td>
+</tr>
+
+<tr>
+<td class="org-left">LCD_RD</td>
+<td class="org-left">PD4</td>
+</tr>
+
+<tr>
+<td class="org-left">LCD_WR</td>
+<td class="org-left">PD5</td>
+</tr>
+
+<tr>
+<td class="org-left">LCD_CS</td>
+<td class="org-left">PD6</td>
+</tr>
+
+<tr>
+<td class="org-left">LCD_RS</td>
+<td class="org-left">PD12</td>
+</tr>
+
+<tr>
+<td class="org-left">LCD_RST</td>
+<td class="org-left">PD13</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgbd886aa" class="outline-3">
+<h3 id="orgbd886aa"><a id="org5eb639d"></a>Frequency synthesizer</h3>
+<div class="outline-text-3" id="text-orgbd886aa">
+<ul class="org-ul">
+<li><a href="doc/SKY72310_Frequency_Synthesizer.pdf">Datasheet</a></li>
+</ul>
+
+<table border="2" cellspacing="0" cellpadding="6">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">No</th>
+<th scope="col" class="org-left">PIN</th>
+<th scope="col" class="org-left">Dir</th>
+<th scope="col" class="org-left">MCU pin</th>
+<th scope="col" class="org-left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">4</td>
+<td class="org-left">PS</td>
+<td class="org-left">AO</td>
+<td class="org-left"><a href="#orgdb8c464">PLL_LD</a></td>
+<td class="org-left">phase detector out-of-lock signal, open collector</td>
+</tr>
+
+<tr>
+<td class="org-right">20</td>
+<td class="org-left">DATA</td>
+<td class="org-left">I</td>
+<td class="org-left"><a href="#org882b44b">PLL_DAT</a></td>
+<td class="org-left">SDI data</td>
+</tr>
+
+<tr>
+<td class="org-right">22</td>
+<td class="org-left">CLK</td>
+<td class="org-left">I</td>
+<td class="org-left"><a href="#org1469754">PLL_CLK</a></td>
+<td class="org-left">SDI clock</td>
+</tr>
+
+<tr>
+<td class="org-right">I</td>
+<td class="org-left">nCS</td>
+<td class="org-left">i</td>
+<td class="org-left"><a href="#org489c70a">PLL_CS</a></td>
+<td class="org-left">SDI, l-h transition stores clocked in data</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org2f40917" class="outline-2">
+<h2 id="org2f40917">Radare and the boot loader</h2>
+<div class="outline-text-2" id="text-org2f40917">
+</div><div id="outline-container-org1bf3aed" class="outline-3">
+<h3 id="org1bf3aed">Get radare</h3>
+<div class="outline-text-3" id="text-org1bf3aed">
+<pre class="example">
+$ git clone --depth 1 https://github.com/radare/radare2
+</pre>
+</div>
+</div>
+<div id="outline-container-org36fa800" class="outline-3">
+<h3 id="org36fa800">(Re)Compile radare</h3>
+<div class="outline-text-3" id="text-org36fa800">
+<pre class="example">
+$ cd radare
+$ git clean -fdx
+$ git pull
+$ sys/build.sh `pwd`/dist
+$ make symstall
+</pre>
+
+<p>
+I use a little helper script &#x2026;
+</p>
+
+<pre class="example">
+#!/bin/sh
+LD_LIBRARY_PATH=
+for _FILE in /usr/src/radare2/libr/*/libr_*.so; do
+	_DIR=$(dirname "$_FILE")
+	if [ -z "$LD_LIBRARY_PATH" ]; then
+		LD_LIBRARY_PATH="$_DIR"
+	else
+		LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$_DIR"
+	fi
+done
+export LD_LIBRARY_PATH
+
+_FILE="$(basename $0)"
+test "$_FILE" = "r2" &amp;&amp; _FILE="radare2"
+
+/usr/src/radare2/binr/$_FILE/$_FILE $*
+</pre>
+
+<p>
+&#x2026; that I link to &ldquo;<code>~/bin/r2</code>&rdquo;, &ldquo;<code>~/bin/r2pm</code>&rdquo; and so on. That way I can
+have the always the newest radare from git and still don&rsquo;t pollute my
+&ldquo;<code>/usr</code>&rdquo; or &ldquo;<code>/usr/local</code>&rdquo; with it.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf1c3caa" class="outline-3">
+<h3 id="orgf1c3caa">Use radare</h3>
+<div class="outline-text-3" id="text-orgf1c3caa">
+<p>
+A dissambly subproject for the bootloader is in the subdirectory &ldquo;<code>disasm/</code>&rdquo;:
+</p>
+
+<pre class="example">
+cd disasm
+./disasm_boot.sh
+</pre>
+
+<p>
+Some commands that I use interactively in Radare2:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">s n</td>
+<td class="org-left">seek around</td>
+</tr>
+
+<tr>
+<td class="org-left">/v 0xe000ed08</td>
+<td class="org-left">search for data e000ed08</td>
+</tr>
+
+<tr>
+<td class="org-left">/x 08ed00e0:ffff0000</td>
+<td class="org-left">search for data e000xxxx</td>
+</tr>
+
+<tr>
+<td class="org-left">pd 10 @ hit1_0</td>
+<td class="org-left">show code around address</td>
+</tr>
+
+<tr>
+<td class="org-left">af</td>
+<td class="org-left">analyze function</td>
+</tr>
+
+<tr>
+<td class="org-left">afr</td>
+<td class="org-left">analyze function recursively</td>
+</tr>
+
+<tr>
+<td class="org-left">aa*</td>
+<td class="org-left">analzye all &ldquo;flags&rdquo; starting with sym.* and &ldquo;entry0&rdquo;</td>
+</tr>
+
+<tr>
+<td class="org-left">aac</td>
+<td class="org-left">(slow) analyze all function calls</td>
+</tr>
+
+<tr>
+<td class="org-left">f~fcn</td>
+<td class="org-left">list functions that are still unnamed</td>
+</tr>
+
+<tr>
+<td class="org-left">V</td>
+<td class="org-left">enter visual mode, pP there to change display mode</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+There are also a bunch of commands in the &ldquo;<code>*.r</code>&rdquo; files which I don&rsquo;t
+usually use interactively. Just look there directly.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Holger Schurig, DH3HS</p><p class="creator">Created with <a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 9.0.1)</p>
+</div>
+</body>
+</html>
