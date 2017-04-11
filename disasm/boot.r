@@ -624,35 +624,12 @@ f vec.FPU @ 0x08005834
 
 #############################################################################
 #
-#  STM43f4 registers
+#  STM43F4 and Cortex-M4 registers
 #
 #############################################################################
 
 . cpu.r
-f RCC_CR			@ 0x40023800
-f RCC_PLLCFGR		@ 0x40023804
-f RCC_CFGR			@ 0x40023808
-f RCC_CIR			@ 0x4002380C
-f RCC_APB1ENR       @ 0x40023840
-f FLASH_KEYR		@ 0x40023c04
-f FLASH_OPTKEYR		@ 0x40023c08
-f FLASH_SR			@ 0x40023c0c
-f FLASH_CR			@ 0x40023c10
-f FLASH_OPTCR		@ 0x40023c14
-f FLASH_OPTCR_RDP	@ 0x40023c15
-f AIRCR_VECTKEY_MASK @ 0x05fa0004
-f io_GPIOE @ 0x40021000
 
-
-#############################################################################
-#
-#  Cortex-M4 registers
-#
-#############################################################################
-
-f VTOR  @ 0xe000ed08
-f AIRCR @ 0xe000ed0c
-f CPACE @ 0xe000ed88
 
 
 Vp
