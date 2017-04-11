@@ -367,18 +367,34 @@ f vec.PEND_SV @ 0x08003082
 .(d4 0x08003c18 5)
 .(d4 0x08003d80 3)
 .(func 0x08003de8 210 otg_fs_int)
-.(func 0x080043f0 388 XXX_080043f0)
-
-#############################################################################
-# see stm32f4xx.c
+.(func 0x080043f0 388 unk_080043f0)
 
 .(d4 0x08004970 16)
 
+.(func 0x080049b4 54 unk_080049b0)
+s 0x080049b4
+
 .(d4 0x08004a6c 10)
+
+.(func 0x08004a94 80 unk_08004a94)
 
 .(d4 0x08004ae4 1)
 
+# The cipher table has been found with "/x 2edf40b5bdda"
+f cipher_table @ 0x08004ae8
+Cd 1024 @ 0x08004ae8
+
+.(func 0x08004ee8 10 unk_08004ee8)
+.(func 0x08004ef2 10 unk_08004ef2)
+.(func 0x08004efc 20 unk_08004efc)
+.(func 0x08004f10 184 unk_08004f10)
+.(func 0x08005020 4 unk_08005020)
+.(func 0x08005024 18 unk_08005024)
+
 .(d4 0x08005038 13)
+
+#############################################################################
+# see stm32f4xx.c
 
 .(func 0x0800506c 96 SystemInit)
 # Enable FPU
@@ -438,12 +454,10 @@ f vec.DMA2_Stream3 @ 0x080054ec
 .(ds 0x08005518 40 str.SPI_Flash_Memory2)
 
 .(func 0x08005540 32 XXX_weird_jumptable)
-s 0x08001af6
-s 0x08005540
-af 0x08005540
-e asm.emustr=0
-afvr r1 r1_ptr int
-afvr r4 r4_end int
+#af 0x08005540
+#e asm.emustr=0
+#afvr r1 r1_ptr int
+#afvr r4 r4_end int
 
 .(d4 0x08005560 2)
 
