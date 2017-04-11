@@ -38,8 +38,6 @@ s boot
 e search.in = io.sections.exec
 # later you can try: "aa*" or (slower) "aac"
 
-# Generate signures with: ./make_ucos_sigs
-# . sig_ucos.r
 
 
 #############################################################################
@@ -54,6 +52,7 @@ e search.in = io.sections.exec
 (d4 addr size,Cd 4 $1 @ $0)            # define 4-byte long word
 (ds addr len lbl,Cs $1 @ $0,f $2 @ $0) # define string
 (dv addr name,f $1 @ $0)               # define variable
+
 
 
 #############################################################################
@@ -601,6 +600,7 @@ f vec.HASH_RNG @ 0x08005830
 f vec.FPU @ 0x08005834
 
 
+
 #############################################################################
 #
 #  Memory locations
@@ -620,6 +620,7 @@ f vec.FPU @ 0x08005834
 .(dv 0x20001214 USBD_cfg_status)
 .(dv 0x20001218 MAL_Buffer)
 .(dv 0x2000122c DeviceState3)
+
 
 
 #############################################################################
