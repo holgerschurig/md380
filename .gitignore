@@ -6,6 +6,7 @@ a.*
 /obj
 /STM32Cube*
 /doc/CS8x0*.pdf
+/doc/Cortex-M4_TRM.pdf
 /doc/GT3136*.pdf
 /doc/ILI9481*.pdf
 /doc/LM2734X*.pdf
@@ -20,7 +21,9 @@ a.*
 /doc/TC75S51F*.pdf
 /doc/TDA2822D*.pdf
 /doc/UMC4N*.pdf
+/doc/W15Q128FV_Flash
 /doc/XC6204*.pdf
 /doc/hrc5000.pdf
 /doc/UC-OS-II.pdf
+/doc/UC-OS-III.pdf
 /README.html

@@ -88,6 +88,9 @@ doc:: doc/LM2734X_Buck_Converter.pdf
 doc/LM2734X_Buck_Converter.pdf:
 	mkdir -p doc
 	wget -O $@ -c http://www.ti.com/lit/ds/symlink/lm2734.pdf
+doc:: doc/Cortex-M4_TRM.pdf
+doc/Cortex-M4_TRM.pdf:
+	wget -O $@ -c http://infocenter.arm.com/help/topic/com.arm.doc.100166_0001_00_en/arm_cortexm4_processor_trm_100166_0001_00_en.pdf
 
 # Software
 doc:: doc/STM32Cube_UM1725_HAL_LL_Driver_description.pdf
