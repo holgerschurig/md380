@@ -7,8 +7,8 @@ e asm.bits = 16
 
 ## Setup sections. Radara will normally get sections from ELF
 ## images, but our boot.bin is a "pure" binary.
-#S 0x08000000 0x08000000 0x0000c000 0x0000c000 boot  -r-x
-#Sa arm 16 0x08000000
+S 0x0800c000 0x0800c000 0x00030000 0x00030000 text  -r-x
+Sa arm 16 0x0800c000
 S 0x10000000 0x10000000 0x00010000 0x00010000 TCRAM mrw
 S 0x20000000 0x20000000 0x000f0000 0x000f0000 ram   mrwx
 S 0xe0000000 0xe0000000 0x01000000 0x01000000 m4    mrw
@@ -34,9 +34,8 @@ e io.va = true
 ### Setup analysis
 # Enable "aa*", which needs a symbol named "entry0"
 # f entry0 @ 0x080056a4
-# s boot
-# e search.in = io.sections.exec
-# # later you can try: "aa*" or (slower) "aac"
+s text
+e search.in = io.sections.exec
 
 
 
