@@ -1,4 +1,4 @@
-# @compile: disasm/checksort.py disasm/myb.r
+# @compile: disasm/checksort.py disasm/boot.r
 
 ### Setting up the CPU
 e asm.arch = arm
@@ -615,11 +615,11 @@ f vec.FPU @ 0x08005834
 .(dv 0x200011fc Manifest_State)
 .(dv 0x20001200 DeviceStatus)
 .(dv 0x20001204 wBlockNum)
+.(dv 0x20001208 usbd_dfu_Desc)
 .(dv 0x20001210 USBD_default_cfg)
 .(dv 0x20001214 USBD_cfg_status)
 .(dv 0x20001218 MAL_Buffer)
 .(dv 0x2000122c DeviceState3)
-.(dv 0x20001208 usbd_dfu_Desc)
 
 
 #############################################################################
