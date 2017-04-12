@@ -30,15 +30,15 @@ CCa 0x08001fe4 Returns 1 if RDP is not locked.  0 if it is locked.
 CCa 0x08002060 Waits for a Flash operation to complete.
 .(func 0x08002060 40 flash_wait)
 
-CCa 0x080049e8 Tests the pins to stay, or not stay, in bootloader mode.
-.(func 0x080049e8 98 bootloader_pin_test)
+#CCa 0x080049e8 Tests the pins to stay, or not stay, in bootloader mode.
+#.(func 0x080049e8 98 bootloader_pin_test)
 
 # Inside of main(), rdp_lock(0x55) is conditionally called if
 # rdp_isnotlocked().  My first jailbreak worked by simply patching
 # this to call rdp_lock(0xAA), which leaves the device unlocked.
 
-CCa 0x080043bc This is the main() function of the bootloader.
-.(func 0x080043bc 388 main)
+#CCa 0x080043bc This is the main() function of the bootloader.
+#.(func 0x080043bc 388 main)
 
 CCa 0x080044a8 Change this immediate from 0x55 to 0xAA to jailbreak the bootloader.
 
@@ -62,13 +62,13 @@ CCa 0x080044a8 Change this immediate from 0x55 to 0xAA to jailbreak the bootload
 # Inside of bootloader_pin_test, the I/O pins for the push-to-talk
 # button and the button above are tested.
 
-CCa 0x8003af2 Tests pin r1 of port r0.
-.(func 0x8003af2 22 gpio_input_test)
-CCa 0x8002384 Starts DFU recovery mode.
-.(func 0x8002384 68 bootloader_setup)
+#CCa 0x8003af2 Tests pin r1 of port r0.
+#.(func 0x8003af2 22 gpio_input_test)
+#CCa 0x8002384 Starts DFU recovery mode.
+#.(func 0x8002384 68 bootloader_setup)
 
 # Comments inside bootloader_pin_test
-CCa 0x080049f2 Test the first button.
-CCa 0x080049fe Test the second button.
-CCa 0x08004a36 Calls the address stored at 0x800C004, the reset vector of the application.
-CCa 0x08004a2e Set the stack pointer to the value at 0x0800C000.
+#CCa 0x080049f2 Test the first button.
+#CCa 0x080049fe Test the second button.
+#CCa 0x08004a36 Calls the address stored at 0x800C004, the reset vector of the application.
+#CCa 0x08004a2e Set the stack pointer to the value at 0x0800C000.
