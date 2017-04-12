@@ -337,14 +337,18 @@ CCa 0x08002004 FLASH_FLAG_BSY
 .(func 0x08002288 20 DCD_EP_SetAddress)
 .(func 0x0800229c 22 DevConnect)
 .(func 0x080022b2 22 DCD_DevDisconnect)
-.(func 0x080022c8 104 XXX_080022c8)
+.(func 0x080022c8 104 USB_OTG_BSP_Init)
 .(d4 0x08002330 1)
-.(func 0x08002334 42 XXX_08002334)
+.(func 0x08002334 42 USB_OTG_BSP_EnableInterrupt)
 .(func 0x0800235e 22 XXX_0800235e)
 .(func 0x08002374 14 USB_OTG_BSP_mDelay)
-.(func 0x08002384 68 XXX_08002384)
-.(func 0x080023c8 4 XXX_080023c8)
-.(func 0x080023cc 82 XXX_080023cc)
+
+#############################################################################
+# see usbd_core.c
+.(func 0x08002384 68 USBD_Init)
+s 0x08002384
+.(func 0x080023c8 4 USBD_DeInit)
+.(func 0x080023cc 82 USBD_SetupStage)
 .(func 0x0800241e 148 XXX_0800241e)
 .(func 0x080024b2 204 XXX_080024b2)
 .(func 0x0800257e 12 XXX_0800257e)
