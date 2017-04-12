@@ -301,11 +301,11 @@ $ git clone --depth 1 https://github.com/radare/radare2
 #+END_EXAMPLE
 ** (Re)Compile radare
 #+BEGIN_EXAMPLE
-$ cd radare
-$ git clean -fdx
-$ git pull
-$ sys/build.sh `pwd`/dist
-$ make symstall
+cd radare
+git clean -fdx
+git pull
+sys/build.sh `pwd`/dist
+make symstall
 #+END_EXAMPLE
 
 I use a little helper script ...
