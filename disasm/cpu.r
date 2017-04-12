@@ -107,3 +107,6 @@ f io_AIRCR              @ 0xe000ed0c # Application Interrupt and Reset Control R
 
 f io_CPACE              @ 0xe000ed88 # Coprocessor Access Control Register
 # http://infocenter.arm.com/help/topic/com.arm.doc.dui0553a/BABDBFBJ.html
+
+# http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0553a/Cihhjgdh.html
+f io_SCR                @ 0xe000ed10 # System Control Register
