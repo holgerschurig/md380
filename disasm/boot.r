@@ -24,6 +24,7 @@ e cfg.fortunes = false
 e asm.lines.ret = true
 e asm.cmtcol = 55
 e scr.utf8 = 1
+e scr.nkey = func
 e asm.emustr = true
 #e asm.section.sub = true
 e bin.baddr = 0x80000000
