@@ -35,7 +35,6 @@ e io.va = true
 ### Setup analysis
 # Enable "aa*", which needs a symbol named "entry0"
 f entry0 @ 0x080056a4
-s boot
 e search.in = io.sections.exec
 # later you can try: "aa*" or (slower) "aac"
 
