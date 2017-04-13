@@ -66,7 +66,7 @@ f io_GPIOD              @ 0x40020c00
 f io_GPIOE              @ 0x40021000
 
 f io_CRC                @ 0x40023000
-f io_CRC_C              @ 0x40023008
+f io_CRC_CR             @ 0x40023008
 
 f io_RCC_CR             @ 0x40023800
 f io_RCC_PLLCFGR        @ 0x40023804
