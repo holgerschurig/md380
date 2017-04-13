@@ -37,7 +37,6 @@ e io.va = true
 # Enable "aa*", which needs a symbol named "entry0"
 f entry0 @ 0x080056a4
 e search.in = io.sections.exec
-# later you can try: "aa*" or (slower) "aac"
 
 
 
@@ -48,14 +47,14 @@ e search.in = io.sections.exec
 
 # Define a functiona AND analyze it:
 #   fs symbols              put the new symbol into the "symbols" flagspace
-#   f sym.name sz @ addr    define new flag
+#   f sym.name @ addr       define new flag
 #   fs *                    switch back to global flagspace
 #   s addr                  seek to addr so that "af" works
 #   e anal.a2f=1            switch to anal algorithm that doesn't create "fcn.*" symbols
 #   af                      analyze function (so that "pdf" and "f." works)
 #   e anal.a2f=0            switch back to normal analyze algorithm
 #   s-                      undo seek
-(func addr sz name,fs symbols,f sym.$2 $1 @ $0,fs *,s $0,e anal.a2f=1,af,e anal.a2f=1,s-)
+(func addr name,fs symbols,f sym.$1 @ $0,fs *,s $0,e anal.a2f=1,af,e anal.a2f=1,s-)
 
 # Define things that reside in data parts of the image
 (d4 addr size,Cd 4 $1 @ $0)            # define 4-byte long word
@@ -69,20 +68,20 @@ e search.in = io.sections.exec
 
 .(d4 0x08000000 98)
 
-.(func 0x08000188 30 NVIC_SystemReset)
+.(func 0x08000188 NVIC_SystemReset)
 
 #############################################################################
 # see usbd_dfu_core.c
 
-.(func 0x080001a8 38 usbd_dfu_Init)
+.(func 0x080001a8 usbd_dfu_Init)
 CCa 0x080001b2 STATE_dfuIDLE
 CCa 0x080001ba STATUS_OK
 
-.(func 0x080001ce 54 usbd_dfu_DeInit)
+.(func 0x080001ce usbd_dfu_DeInit)
 CCa 0x080001d4 STATE_dfuIDLE
 CCa 0x080001dc STATUS_OK
 
-.(func 0x08000204 190 usbd_dfu_Setup)
+.(func 0x08000204 usbd_dfu_Setup)
 CCa 0x0800020a req.bmRequest
 CCa 0x0800020c USB_REQ_TYPE_MASK
 CCa 0x08000212 USB_REQ_TYPE_STANDARD
@@ -105,7 +104,7 @@ CCa 0x0800027e DFU_DESCRIPTOR_TYPE
 
 # XXX quite interesting function, because this function
 # XXX decodes the DFU protocol and acts accordingly
-.(func 0x080002c2 1330 EP0_TxSent)
+.(func 0x080002c2 EP0_TxSent)
 CCa 0x080002cc STATE_dfuDNBUSY
 CCa 0x080002e4 CMD_GETCOMMANDS
 CCa 0x0800030a CMD_SETADDRESSPOINTER
@@ -126,10 +125,10 @@ f. loc.ep0txsent.dnbusy @ 0x80007e2
 CCa 0x080007e8 STATE_dfuMANIFEST
 # Later there is code with command b4
 
-.(func 0x080007f4 4 EP0_RxReady)
+.(func 0x080007f4 EP0_RxReady)
 CCa 0x080007f4 USBD_OK
 
-.(func 0x080007f8 162 DFU_Req_DETACH)
+.(func 0x080007f8 DFU_Req_DETACH)
 CCa 0x08000802 STATE_dfuIDLE
 CCa 0x0800080c STATE_dfuDNLOAD_SYNC
 CCa 0x08000816 STATE_dfuDNLOAD_IDLE
@@ -137,7 +136,7 @@ CCa 0x08000820 STATE_dfuMANIFEST_SYNC
 CCa 0x0800082a STATE_dfuUPLOAD_IDLE
 CCa 0x08000832 STATE_dfuIDLE
 
-.(func 0x0800089a 168 DFU_Req_DNLOAD)
+.(func 0x0800089a DFU_Req_DNLOAD)
 CCA 0x0800089c req.wLength
 CCa 0x080008a8 STATE_dfuIDLE
 CCa 0x080008b2 STATE_dfuDNLOAD_IDLE
@@ -145,7 +144,7 @@ CCa 0x080008f8 STATE_dfuDNLOAD_IDLE
 CCa 0x08000902 STATE_dfuIDLE
 CCa 0x08000912 STATE_dfuMANIFEST_SYNC
 
-.(func 0x08000942 1170 DFU_Req_UPLOAD)
+.(func 0x08000942 DFU_Req_UPLOAD)
 CCa 0x08000958 STATE_dfuIDLE
 CCa 0x08000962 STATE_dfuUPLOAD_IDLE
 CCa 0x08000984 XXX here it get's interesting
@@ -159,64 +158,64 @@ f. loc.upload_x32 @ 0x8000c14
 # TODO .(dv 0x0004b510 Pointer)
 .(d4 0x08000dd4 11)
 
-.(func 0x08000e04 482 DFU_Req_GETSTATUS)
+.(func 0x08000e04 DFU_Req_GETSTATUS)
 CCa 0x08000e0a STATE_dfuDNLOAD_SYNC
 CCa 0x08000e0e STATE_dfuMANIFEST_SYNC
 CCa 0x08000e46 CMD_ERASE
 
 .(d4 0x08000fe8 1)
 
-.(func 0x08000fec 100 DFU_Req_CLEARSTATUS)
+.(func 0x08000fec DFU_Req_CLEARSTATUS)
 
-.(func 0x08001050 12 DFU_Req_GETSTATE)
+.(func 0x08001050 DFU_Req_GETSTATE)
 
 .(d4 0x0800105c 7)
 
-.(func 0x08001078 98 DFU_Req_ABORT)
+.(func 0x08001078 DFU_Req_ABORT)
 
 .(d4 0x080010dc 1)
 
-.(func 0x080010e0 96 DFU_LeaveDFUMode)
+.(func 0x080010e0 DFU_LeaveDFUMode)
 CCa 0x080010e4 Manifest_complete
 
-.(func 0x08001140 8 USBD_DFU_GetCfgDesc)
+.(func 0x08001140 USBD_DFU_GetCfgDesc)
 
-.(func 0x08001148 36 USBD_DFU_GetUsrStringDesc)
+.(func 0x08001148 USBD_DFU_GetUsrStringDesc)
 
 #############################################################################
 # see usbd_dfu_mal.c
 
 .(d4 0x0800116c 15)
 
-.(func 0x080011a8 42 MAL_Init)
+.(func 0x080011a8 MAL_Init)
 CCa 0x080011c6 tMALTab.pMAL_Init
 
-.(func 0x080011d2 42 MAL_DeInit)
+.(func 0x080011d2 MAL_DeInit)
 CCa 0x080011f0 tMALTab.pMAL_DeInit
 
-.(func 0x080011fc 76 MAL_Erase)
+.(func 0x080011fc MAL_Erase)
 CCa 0x0800123c tMALTab.pMAL_Erase
 
-.(func 0x08001298 54 MAL_Read)
+.(func 0x08001298 MAL_Read)
 CCa 0x080012c2 tMALTab.pMAL_Read
 
-.(func 0x080012ce 96 MAL_GetStatus)
+.(func 0x080012ce MAL_GetStatus)
 CCa 0x0800134a tMALTab.pMAL_CheckAdd
 
 #############################################################################
 # see usbd_req.c
 
-.(func 0x0800132e 20 MAL_CheckAdd)
+.(func 0x0800132e MAL_CheckAdd)
 
 .(d4 0x0800135c 2)
 
-.(func 0x08001364 88 USBD_StdDevReq)
+.(func 0x08001364 USBD_StdDevReq)
 
-.(func 0x080013bc 80 USBD_StdItfReq)
+.(func 0x080013bc USBD_StdItfReq)
 
-.(func 0x0800140c 360 USBD_StdEPReq)
+.(func 0x0800140c USBD_StdEPReq)
 
-.(func 0x08001574 296 USBD_GetDescriptor)
+.(func 0x08001574 USBD_GetDescriptor)
 CCa 0x08001582 USB_DESC_TYPE_DEVICE
 CCa 0x08001586 USB_DESC_TYPE_CONFIGURATION
 CCa 0x0800158a USB_DESC_TYPE_STRING
@@ -229,135 +228,135 @@ f. loc.getdesc_devqual @ 0x800166a
 f. loc.getdesc_other_speedconf @ 0x8001674
 f. loc.getdesc_default @ 0x800167e
 
-.(func 0x0800169c 88 USBD_SetAddress)
+.(func 0x0800169c USBD_SetAddress)
 CCa 0x080016b6 USB_OTG_CONFIGURED
 
-.(func 0x080016f4 192 USBD_SetConfig)
+.(func 0x080016f4 USBD_SetConfig)
 CCa 0x08001712 USB_OTG_ADDRESSED
 CCa 0x08001716 USB_OTG_CONFIGURED
 
-.(func 0x080017b4 56 USBD_GetConfig)
+.(func 0x080017b4 USBD_GetConfig)
 CCa 0x080017c6 USB_OTG_ADDRESSED
 CCa 0x080017ca USB_OTG_CONFIGURED
 
-.(func 0x080017ec 54 USBD_GetStatus)
+.(func 0x080017ec USBD_GetStatus)
 
-.(func 0x08001822 136 USBD_SetFeature)
+.(func 0x08001822 USBD_SetFeature)
 CCa 0x0800182e USB_FEATURE_REMOTE_WAKEUP
 CCa 0x08001848 USB_FEATURE_TEST_MODE
 
 .(d4 0x080018ac 5)
 
-.(func 0x080018c0 52 USBD_ClrFeature)
+.(func 0x080018c0 USBD_ClrFeature)
 CCa 0x080018e2 pdev.dev.class_cb.Setup
 
-.(func 0x080018f4 68 USBD_ParseSetupRequest)
-.(func 0x08001938 28 USBD_CtlError)
-.(func 0x08001954 70 USBD_GetString)
-.(func 0x0800199a 20 USBD_GetLen)
+.(func 0x080018f4 USBD_ParseSetupRequest)
+.(func 0x08001938 USBD_CtlError)
+.(func 0x08001954 USBD_GetString)
+.(func 0x0800199a USBD_GetLen)
 
 #############################################################################
 # see usbd_ioreq.c
 
-.(func 0x080019ae 40 USBD_CtlSendData)
-.(func 0x080019d6 22 USBD_CtlContinueSendData)
-.(func 0x080019ec 40 USBD_CtlPrepareRx)
-.(func 0x08001a14 22 USBD_CtlContinueRx)
+.(func 0x080019ae USBD_CtlSendData)
+.(func 0x080019d6 USBD_CtlContinueSendData)
+.(func 0x080019ec USBD_CtlPrepareRx)
+.(func 0x08001a14 USBD_CtlContinueRx)
 
-.(func 0x08001a2a 36 USBD_CtlSendStatus)
+.(func 0x08001a2a USBD_CtlSendStatus)
 CCa 0x08001a30 USB_OTG_EP0_STATUS_IN
 
-.(func 0x08001a4e 36 USBD_CtlReceiveStatus)
+.(func 0x08001a4e USBD_CtlReceiveStatus)
 CCa 0x08001a54 USB_OTG_EP0_STATUS_OUT
 
 #############################################################################
 # no source yet :-(
 
-.(func 0x08001a72 46 XXX_08001a72)
-.(func 0x08001aa0 85 XXX_08001aa0)
-.(func 0x08001af6 34 XXX_08001af6)
-.(func 0x08001b18 36 XXX_08001b18)
-.(func 0x08001b3c 52 XXX_08001b3c)
-.(func 0x08001b70 18 XXX_08001b70)
-.(func 0x08001b82 26 XXX_08001b82)
-.(func 0x08001b9c 120 XXX_08001b9c_something_with_CRC)
+.(func 0x08001a72 XXX_08001a72)
+.(func 0x08001aa0 XXX_08001aa0)
+.(func 0x08001af6 XXX_08001af6)
+.(func 0x08001b18 XXX_08001b18)
+.(func 0x08001b3c XXX_08001b3c)
+.(func 0x08001b70 XXX_08001b70)
+.(func 0x08001b82 XXX_08001b82)
+.(func 0x08001b9c XXX_08001b9c_something_with_CRC)
 CCa 0x08001bcc ENABLE
 CCa 0x08001bce RCC_AHB1Periph_CRC
 CCa 0x08001c08 DISABLE
 CCa 0x08001c0a RCC_AHB1Periph_CRC
 
-.(func 0x08001c14 18 XXX_08001c14)
-.(func 0x08001c26 18 XXX_08001c26)
-.(func 0x08001c38 26 XXX_08001c38)
-.(func 0x08001c52 22 XXX_08001c52)
-.(func 0x08001c68 36 XXX_08001c68)
-.(func 0x08001c8c 86 XXX_08001c8c)
-.(func 0x08001ce2 26 XXX_08001ce2)
-.(func 0x08001cfc 34 XXX_08001cfc)
-.(func 0x08001d1e 86 XXX_08001d1e)
-.(func 0x08001d74 22 XXX_08001d74)
-.(func 0x08001d8a 22 XXX_08001d8a)
-.(func 0x08001da0 22 XXX_08001da0)
-.(func 0x08001db6 24 XXX_08001db6)
-.(func 0x08001dce 16 XXX_08001dce)
-.(func 0x08001dde 16 XXX_08001dde)
+.(func 0x08001c14 XXX_08001c14)
+.(func 0x08001c26 XXX_08001c26)
+.(func 0x08001c38 XXX_08001c38)
+.(func 0x08001c52 XXX_08001c52)
+.(func 0x08001c68 XXX_08001c68)
+.(func 0x08001c8c XXX_08001c8c)
+.(func 0x08001ce2 XXX_08001ce2)
+.(func 0x08001cfc XXX_08001cfc)
+.(func 0x08001d1e XXX_08001d1e)
+.(func 0x08001d74 XXX_08001d74)
+.(func 0x08001d8a XXX_08001d8a)
+.(func 0x08001da0 XXX_08001da0)
+.(func 0x08001db6 XXX_08001db6)
+.(func 0x08001dce XXX_08001dce)
+.(func 0x08001dde XXX_08001dde)
 
 #############################################################################
 # no source yet :-(
 
 .(d4 0x08001df0 26)
 
-.(func 0x08001e58 32 FLASH_Unlock)
+.(func 0x08001e58 FLASH_Unlock)
 
-.(func 0x08001e78 18 XXX_08001e78)
-.(func 0x08001e8a 176 XXX_08001e8a)
-.(func 0x08001f3a 82 XXX_08001f3a)
+.(func 0x08001e78 XXX_08001e78)
+.(func 0x08001e8a XXX_08001e8a)
+.(func 0x08001f3a XXX_08001f3a)
 CCa 0x08001f52 clear PSIZE
 CCa 0x08001f5e set PSIZE to program x32
 CCa 0x08001f6a activate flash programming
 CCa 0x08001f7e weird method to clear bit 0 and stop programming
 
-.(func 0x08001f8c 22 FLASH_UnlockOpt)
+.(func 0x08001f8c FLASH_UnlockOpt)
 CCa 0x08001f90 isolate the OPTLOCK bit
 
-.(func 0x08001fa2 14 FLASH_LockOpt)
+.(func 0x08001fa2 FLASH_LockOpt)
 
-.(func 0x08001fb0 24 rdp_lock)
+.(func 0x08001fb0 rdp_lock)
 CCa 0x08001fb0 rdp_lock(0x55) locks the device, rdp_lock(0xAA) unlocks it.
 
 # sym.rdp_lock
 CCa 0x08001fd0 set OPTSTRT
 
-.(func 0x08001fc8 28 rdp_applylock)
+.(func 0x08001fc8 rdp_applylock)
 CCa 0x08001fc8 After calling rdp_lock(), rdp_applylock() sets the state.
 
-.(func 0x08001fe4 22 rdp_isnotlocked)
+.(func 0x08001fe4 rdp_isnotlocked)
 CCa 0x08001fe4 Returns 1 if RDP is not locked.  0 if it is locked.
 
-.(func 0x08001ffa 58 FLASH_GetFlagStatus)
+.(func 0x08001ffa FLASH_GetFlagStatus)
 CCa 0x08002000 isolate BSY bit
 CCa 0x08002004 FLASH_FLAG_BSY
 
 .(d4 0x08002038 10)
-.(func 0x08002060 40 flash_wait)
+.(func 0x08002060 flash_wait)
 
 #############################################################################
 # see usb_dcd.c
 
-.(func 0x08002088 150 DCD_Init)
-.(func 0x0800211e 90 DCD_EP_Close)
-.(func 0x08002178 70 DCD_EP_PrepareRx)
-.(func 0x080021be 62 DCD_EP_Tx)
-.(func 0x080021fc 70 DCD_EP_Stall)
-.(func 0x08002242 70 DCD_EP_ClrStall)
-.(func 0x08002288 20 DCD_EP_SetAddress)
-.(func 0x0800229c 22 DevConnect)
-.(func 0x080022b2 22 DCD_DevDisconnect)
+.(func 0x08002088 DCD_Init)
+.(func 0x0800211e DCD_EP_Close)
+.(func 0x08002178 DCD_EP_PrepareRx)
+.(func 0x080021be DCD_EP_Tx)
+.(func 0x080021fc DCD_EP_Stall)
+.(func 0x08002242 DCD_EP_ClrStall)
+.(func 0x08002288 DCD_EP_SetAddress)
+.(func 0x0800229c DevConnect)
+.(func 0x080022b2 DCD_DevDisconnect)
 
 #############################################################################
 # see usb_bsp_template.c, usb_bsp.c
 
-.(func 0x080022c8 104 USB_OTG_BSP_Init)
+.(func 0x080022c8 USB_OTG_BSP_Init)
 CCa 0x0800231c ENABLE
 CCa 0x0800231e RCC_APB2Periph_SYSCFG
 CCa 0x08002326 ENABLE
@@ -367,181 +366,181 @@ CCa 0x0800230a Pin PA11
 CCa 0x08002312 GPIO_AF_OTG_FS
 CCa 0x08002314 Pin PA12
 
-# .(func 0x08003b52 82 GPIO_PinAFConfig)
+# .(func 0x08003b52 GPIO_PinAFConfig)
 # CCa 0x08003b52 r0=io_GPIOx, r1=pinsource, r2=GPIO_AF
 
 .(d4 0x08002330 1)
 
-.(func 0x08002334 42 USB_OTG_BSP_EnableInterrupt)
+.(func 0x08002334 USB_OTG_BSP_EnableInterrupt)
 CCa 0x0800233e OTG_FS_IRQn
 # calls maybe NVIC_Init, see https://www.mikrocontroller.net/topic/274570
 
-.(func 0x0800235e 22 USB_OTG_BSP_uDelay)
+.(func 0x0800235e USB_OTG_BSP_uDelay)
 
-.(func 0x08002374 14 USB_OTG_BSP_mDelay)
+.(func 0x08002374 USB_OTG_BSP_mDelay)
 
 #############################################################################
 # see usb_bsp_template.c / usbd_core.c
 
-.(func 0x08002384 68 USBD_Init)
-.(func 0x080023c8 4 USBD_DeInit)
-.(func 0x080023cc 82 USBD_SetupStage)
-.(func 0x0800241e 148 XXX_0800241e)
-.(func 0x080024b2 204 XXX_080024b2)
-.(func 0x0800257e 12 XXX_0800257e)
+.(func 0x08002384 USBD_Init)
+.(func 0x080023c8 USBD_DeInit)
+.(func 0x080023cc USBD_SetupStage)
+.(func 0x0800241e XXX_0800241e)
+.(func 0x080024b2 XXX_080024b2)
+.(func 0x0800257e XXX_0800257e)
 .(d4 0x0800258c 1)
-.(func 0x08002590 48 XXX_08002590)
-.(func 0x080025c0 30 XXX_080025c0)
-.(func 0x080025de 28 XXX_080025de)
-.(func 0x080025fa 24 XXX_080025fa)
-.(func 0x08002612 28 USBD_SetCfg)
-.(func 0x0800262e 16 USBD_ClrCfg)
-.(func 0x0800263e 14 XXX_0800263e)
-.(func 0x0800264c 14 XXX_0800264c)
-.(func 0x0800265c 32 XXX_0800265c)
-.(func 0x0800267c 98 XXX_0800267c)
-.(func 0x080026de 64 XXX_080026de)
-.(func 0x0800271e 42 XXX_0800271e)
-.(func 0x08002748 218 USB_OTG_SelectCore)
-.(func 0x08002822 182 USB_OTG_CoreInit)
-.(func 0x080028d8 24 USB_OTG_EnableGlobalInt)
-.(func 0x080028f0 26 USB_OTG_DisableGlobalInt)
-.(func 0x0800290a 70 XXX_0800290a)
-.(func 0x08002950 62 XXX_08002950)
+.(func 0x08002590 XXX_08002590)
+.(func 0x080025c0 XXX_080025c0)
+.(func 0x080025de XXX_080025de)
+.(func 0x080025fa XXX_080025fa)
+.(func 0x08002612 USBD_SetCfg)
+.(func 0x0800262e USBD_ClrCfg)
+.(func 0x0800263e XXX_0800263e)
+.(func 0x0800264c XXX_0800264c)
+.(func 0x0800265c XXX_0800265c)
+.(func 0x0800267c XXX_0800267c)
+.(func 0x080026de XXX_080026de)
+.(func 0x0800271e XXX_0800271e)
+.(func 0x08002748 USB_OTG_SelectCore)
+.(func 0x08002822 USB_OTG_CoreInit)
+.(func 0x080028d8 USB_OTG_EnableGlobalInt)
+.(func 0x080028f0 USB_OTG_DisableGlobalInt)
+.(func 0x0800290a XXX_0800290a)
+.(func 0x08002950 XXX_08002950)
 .(d4 0x08002990 2)
-.(func 0x08002998 54 USB_OTG_SetCurrentMode)
-.(func 0x080029ce 10 XXX_080029ce)
-.(func 0x080029d8 20 XXX_080029d8)
-.(func 0x080029ec 18 XXX_080029ec)
-.(func 0x080029fe 16 XXX_080029fe)
-.(func 0x08002a0e 368 USB_OTG_CoreInitDev)
-.(func 0x08002b7e 88 XXX_08002b7e)
-.(func 0x08002bd6 44 XXX_08002bd6)
-.(func 0x08002c02 74 XXX_08002c02)
-.(func 0x08002c4c 114 USB_OTG_EPDeactivate)
-.(func 0x08002cbe 358 USB_OTG_EPStartXfer)
-.(func 0x08002e24 294 USB_OTG_EP0StartXfer)
-.(func 0x08002f4a 62 USB_OTG_EPSetStall)
-.(func 0x08002f88 52 USB_OTG_EPClearStall)
-.(func 0x08002fc6 14 XXX_08002fc6)
-.(func 0x08002fd4 20 XXX_08002fd4)
-.(func 0x08002fe8 14 XXX_08002fe8)
-.(func 0x08002ff6 80 USB_OTG_EP0_OutStart)
+.(func 0x08002998 USB_OTG_SetCurrentMode)
+.(func 0x080029ce XXX_080029ce)
+.(func 0x080029d8 XXX_080029d8)
+.(func 0x080029ec XXX_080029ec)
+.(func 0x080029fe XXX_080029fe)
+.(func 0x08002a0e USB_OTG_CoreInitDev)
+.(func 0x08002b7e XXX_08002b7e)
+.(func 0x08002bd6 XXX_08002bd6)
+.(func 0x08002c02 XXX_08002c02)
+.(func 0x08002c4c USB_OTG_EPDeactivate)
+.(func 0x08002cbe USB_OTG_EPStartXfer)
+.(func 0x08002e24 USB_OTG_EP0StartXfer)
+.(func 0x08002f4a USB_OTG_EPSetStall)
+.(func 0x08002f88 USB_OTG_EPClearStall)
+.(func 0x08002fc6 XXX_08002fc6)
+.(func 0x08002fd4 XXX_08002fd4)
+.(func 0x08002fe8 XXX_08002fe8)
+.(func 0x08002ff6 USB_OTG_EP0_OutStart)
 
 #############################################################################
 
-.(func 0x08003048 8 CPU_SR_Save_0)
+.(func 0x08003048 CPU_SR_Save_0)
 CCa 0x08003048 store current PRIMASK in r0
 CCa 0x0800304c disable IRQ via PRIMASK
-.(func 0x08003050 6 CPU_SR_Restore_)
-.(func 0x08003056 10 XXX_08003056)
-.(func 0x08003072 8 XXX_08003072)
-.(func 0x0800307a 8 XXX_0800307a)
-.(func 0x08003082 86 vec.PEND_SV)
+.(func 0x08003050 CPU_SR_Restore_)
+.(func 0x08003056 XXX_08003056)
+.(func 0x08003072 XXX_08003072)
+.(func 0x0800307a XXX_0800307a)
+.(func 0x08003082 vec.PEND_SV)
 f vec.PEND_SV @ 0x08003082
 .(d4 0x080030d8 9)
-.(func 0x080030fc 122 XXX_080030fc)
-.(func 0x08003176 140 XXX_08003176)
-.(func 0x08003202 50 XXX_08003202)
-.(func 0x08003234 92 XXX_08003234)
-.(func 0x08003290 30 XXX_08003290)
+.(func 0x080030fc XXX_080030fc)
+.(func 0x08003176 XXX_08003176)
+.(func 0x08003202 XXX_08003202)
+.(func 0x08003234 XXX_08003234)
+.(func 0x08003290 XXX_08003290)
 .(d4 0x080032b0 11)
 
-.(func 0x080032dc 130 XXX_080032dc_maybe_init_spi1)
+.(func 0x080032dc XXX_080032dc_maybe_init_spi1)
 CCa 0x080032e0 ENABLE
 CCa 0x080032e2 RCC_APB2Periph_SPI1
 
-.(func 0x0800335e 52 XXX_0800335e)
-.(func 0x08003392 52 XXX_08003392)
-.(func 0x080033c6 76 XXX_080033c6)
-.(func 0x08003412 332 XXX_08003412)
-.(func 0x0800355e 70 XXX_0800355e)
-.(func 0x080035a4 58 XXX_080035a4)
-.(func 0x080035de 18 XXX_080035de)
-.(func 0x080035f0 34 XXX_080035f0)
-.(func 0x08003612 28 XXX_08003612)  # something with SPI1
-.(func 0x0800362e 24 XXX_0800362e)  # something with SPI1
-.(func 0x08003646 704 XXX_08003646)
+.(func 0x0800335e XXX_0800335e)
+.(func 0x08003392 XXX_08003392)
+.(func 0x080033c6 XXX_080033c6)
+.(func 0x08003412 XXX_08003412)
+.(func 0x0800355e XXX_0800355e)
+.(func 0x080035a4 XXX_080035a4)
+.(func 0x080035de XXX_080035de)
+.(func 0x080035f0 XXX_080035f0)
+.(func 0x08003612 XXX_08003612)  # something with SPI1
+.(func 0x0800362e XXX_0800362e)  # something with SPI1
+.(func 0x08003646 XXX_08003646)
 .(d4 0x08003908 4)
-.(func 0x08003918 52 XXX_08003918)
-.(func 0x0800394c 76 XXX_0800394c)
-.(func 0x08003998 78 XXX_08003998)
-.(func 0x080039e8 10 XXX_080039e8)
+.(func 0x08003918 XXX_08003918)
+.(func 0x0800394c XXX_0800394c)
+.(func 0x08003998 XXX_08003998)
+.(func 0x080039e8 XXX_080039e8)
 
 #############################################################################
 # see stm32f4xx_rcc.c
 
-.(func 0x080039f2 32 RCC_AHB1PeriphClockCmd)
+.(func 0x080039f2 RCC_AHB1PeriphClockCmd)
 CCa 0x080039f4 r1 is NewState
 CCa 0x080039f2 r0 is RCC_AHB1Periph
 
-.(func 0x08003a12 32 RCC_AHB2PeriphClockCmd)
-.(func 0x08003a32 32 RCC_APB2PeriphClockCmd)
+.(func 0x08003a12 RCC_AHB2PeriphClockCmd)
+.(func 0x08003a32 RCC_APB2PeriphClockCmd)
 .(d4 0x08003a54 4)
 
 #############################################################################
 # see stm32f4xx_crc.c
 
-.(func 0x08003a64 8 CRC_ResetDR)
+.(func 0x08003a64 CRC_ResetDR)
 CCa 0x08003a66 CRC_CR_RESET
 
-.(func 0x08003a6c 10 CRC_CalcCRC)
+.(func 0x08003a6c CRC_CalcCRC)
 .(d4 0x08003a78 2)
 
 #############################################################################
 # see stm32f4xx_gpio.c
 
-.(func 0x08003a80 166 GPIO_Init)
+.(func 0x08003a80 GPIO_Init)
 CCa 0x08003a80 r0=io_GPIOx, r1=*GPIO_InitStruct
 CCa 0x08003a82 r2 holds pinpos
 CCa 0x08003a90 r3 holds pos
 CCa 0x08003a94 r4 holds currentpin
 
-.(func 0x08003b26 22 GPIO_ReadInputDataBit)
+.(func 0x08003b26 GPIO_ReadInputDataBit)
 CCa 0x08003b26 r0_io_GPIOx, r1 = has pin mask
 CCa 0x08003b28 read GPIOx input data register
 
-.(func 0x08003b3c 4 GPIO_SetBits)
+.(func 0x08003b3c GPIO_SetBits)
 CCa 0x08003b3c BSRRL
 
-.(func 0x08003b40 4 GPIO_ResetBits)
+.(func 0x08003b40 GPIO_ResetBits)
 CCa 0x08003b40 BSRRL
 
-.(func 0x08003b44 14 GPIO_WriteBit)
+.(func 0x08003b44 GPIO_WriteBit)
 CCa 0x08003b4a BSRRL
 CCa 0x08003b4e BSRRL
 
-.(func 0x08003b52 82 GPIO_PinAFConfig)
+.(func 0x08003b52 GPIO_PinAFConfig)
 CCa 0x08003b52 r0=io_GPIOx, r1=pinsource, r2=GPIO_AF
 
-.(func 0x08003ba4 10 XXX_08003ba4_maybe_set_AIRCR)
-.(func 0x08003bae 104 XXX_08003bae_maybe_set_IRQ_Priority)
+.(func 0x08003ba4 XXX_08003ba4_maybe_set_AIRCR)
+.(func 0x08003bae XXX_08003bae_maybe_set_IRQ_Priority)
 .(d4 0x08003c18 5)
-.(func 0x08003c2c 64 XXX_08003c2c)
-.(func 0x08003c6c 28 XXX_08003c6c)
-.(func 0x08003c88 4 XXX_08003c88)
-.(func 0x08003c8c 4 XXX_08003c8c)
-.(func 0x08003c90 20 XXX_08003c90)
-.(func 0x08003ca4 218 XXX_08003ca4)
+.(func 0x08003c2c XXX_08003c2c)
+.(func 0x08003c6c XXX_08003c6c)
+.(func 0x08003c88 XXX_08003c88)
+.(func 0x08003c8c XXX_08003c8c)
+.(func 0x08003c90 XXX_08003c90)
+.(func 0x08003ca4 XXX_08003ca4)
 .(d4 0x08003d80 3)
-.(func 0x08003d8c 92 XXX_08003d8c)
-.(func 0x08003de8 210 otg_fs_int)
-.(func 0x08003eba 72 XXX_08003eba)
-.(func 0x08003f02 136 XXX_08003f02)
-.(func 0x08003f8a 244 XXX_08003f8a)
-.(func 0x0800407e 202 XXX_0800407e)
-.(func 0x08004148 28 XXX_08004148)
-.(func 0x08004164 158 XXX_08004164)
-.(func 0x08004202 136 XXX_08004202)
-.(func 0x0800428a 186 XXX_0800428a)
-.(func 0x08004344 74 XXX_08004344)
-.(func 0x0800438e 28 XXX_0800438e)
-.(func 0x080043aa 28 XXX_080043aa)
+.(func 0x08003d8c XXX_08003d8c)
+.(func 0x08003de8 otg_fs_int)
+.(func 0x08003eba XXX_08003eba)
+.(func 0x08003f02 XXX_08003f02)
+.(func 0x08003f8a XXX_08003f8a)
+.(func 0x0800407e XXX_0800407e)
+.(func 0x08004148 XXX_08004148)
+.(func 0x08004164 XXX_08004164)
+.(func 0x08004202 XXX_08004202)
+.(func 0x0800428a XXX_0800428a)
+.(func 0x08004344 XXX_08004344)
+.(func 0x0800438e XXX_0800438e)
+.(func 0x080043aa XXX_080043aa)
 .(d4 0x080043c8 2)
-.(func 0x080043d0 32 XXX_080043d0)
-.(func 0x080043f0 388 unk_080043f0)
+.(func 0x080043d0 XXX_080043d0)
+.(func 0x080043f0 unk_080043f0)
 
-.(func 0x08004574 100 XXX_08004574_maybe_init_gpio)
+.(func 0x08004574 XXX_08004574_maybe_init_gpio)
 CCa 0x08004578 ENABLE
 CCa 0x0800457a RCC_AHB1Periph_GPIOA..E
 CCa 0x08004580 ENABLE
@@ -549,7 +548,7 @@ CCa 0x08004582 RCC_APB2Periph_SYSCFG
 CCa 0x0800458a DISABLE
 CCa 0x0800458c RCC_APB2Periph_TIM1
 
-.(func 0x080045e0 426 XXX_080045e0)
+.(func 0x080045e0 XXX_080045e0)
 # NOTE: this function doesn't match the schematics: it sets PC3, PC4, PC5, PC13, PC14 to SPI
 CCa 0x08004728 GPIO_AF_SPI
 CCa 0x08004734 GPIO_AF_SPI
@@ -558,19 +557,19 @@ CCa 0x0800474c GPIO_AF_SPI
 CCa 0x08004758 GPIO_AF_SPI
 CCa 0x08004764 GPIO_AF_SPI
 
-.(func 0x0800478a 100 XXX_0800478a)
-.(func 0x080047ee 384 XXX_080047ee)
+.(func 0x0800478a XXX_0800478a)
+.(func 0x080047ee XXX_080047ee)
 .(d4 0x08004970 17)
 
-.(func 0x080049b4 54 unk_080049b0)
-.(func 0x080049ee 54 XXX_080049ee)
-.(func 0x08004a08 98 call_firmware)
+.(func 0x080049b4 unk_080049b0)
+.(func 0x080049ee XXX_080049ee)
+.(func 0x08004a08 call_firmware)
 CCa 0x08004a0c 1 << 11
 CCa 0x08004a18 1 << 9
 CCa 0x080044a8 Change this immediate from 0x55 to 0xAA to jailbreak the bootloader.
 .(d4 0x08004a6c 10)
 
-.(func 0x08004a94 80 unk_08004a94)
+.(func 0x08004a94 unk_08004a94)
 
 .(d4 0x08004ae4 1)
 
@@ -578,19 +577,19 @@ CCa 0x080044a8 Change this immediate from 0x55 to 0xAA to jailbreak the bootload
 f cipher_table @ 0x08004ae8
 Cd 1024 @ 0x08004ae8
 
-.(func 0x08004ee8 10 unk_08004ee8)
-.(func 0x08004ef2 10 unk_08004ef2)
-.(func 0x08004efc 20 unk_08004efc)
-.(func 0x08004f10 184 unk_08004f10)
-.(func 0x08005020 4 unk_08005020)
-.(func 0x08005024 18 unk_08005024)
+.(func 0x08004ee8 unk_08004ee8)
+.(func 0x08004ef2 unk_08004ef2)
+.(func 0x08004efc unk_08004efc)
+.(func 0x08004f10 unk_08004f10)
+.(func 0x08005020 unk_08005020)
+.(func 0x08005024 unk_08005024)
 
 .(d4 0x08005038 13)
 
 #############################################################################
 # see stm32f4xx.c
 
-.(func 0x0800506c 96 SystemInit)
+.(func 0x0800506c SystemInit)
 # Enable FPU
 CCa 0x0800506e access Coprozessor Access Control Register
 CCa 0x08005072 enable CP10 and CP11 coprocessors (FPU)
@@ -612,7 +611,7 @@ CCa 0x08005114 if (HSEStatus == 0x01)
 CCa 0x0800511c set PWREN
 CCa 0x08005128 set PWR_CR_VOS
 
-.(func 0x080050cc 202 SetSysClock)
+.(func 0x080050cc SetSysClock)
 CCa 0x080055e4 set DN (Default NaN)
 CCa 0x080055e8 store in FPSCR
 
@@ -647,7 +646,7 @@ f vec.DMA2_Stream3 @ 0x080054ec
 .(ds 0x080054f0 40 str.SPI_Flash_Memory1)
 .(ds 0x08005518 40 str.SPI_Flash_Memory2)
 
-.(func 0x08005540 32 XXX_weird_jumptable)
+.(func 0x08005540 XXX_weird_jumptable)
 #e asm.emustr=0
 #afvr r1 r1_ptr int
 #afvr r4 r4_end int
@@ -661,25 +660,25 @@ f loc.weird_jumptable @ 0x800558c
 
 .(ds 0x080055b8 0x1c str.Radio_USB_Mode)
 
-.(func 0x080055d4 26 init_fpu)
+.(func 0x080055d4 init_fpu)
 CCa 0x080055dc access CPACE
 CCa 0x080055de enable CP10 and CP11 coprocessors (FPU)
 
 .(ds 0x080055f0 0x14 str.Radio_Config)
 
 .(ds 0x08005608 0x18 str.Radio_Interface)
-.(func 0x08005620 26 main2)
+.(func 0x08005620 main2)
 
-.(func 0x08005636 4 store_1_in_r0)
+.(func 0x08005636 store_1_in_r0)
 
-.(func 0x0800563a 14 XXX_0800563a)
+.(func 0x0800563a XXX_0800563a)
 
 .(ds 0x08005660 0x14 str.Anytone)
 .(ds 0x08005674 0x10 str.AnyRoad)
 .(ds 0x08005684 0x10 str.00000000010B)
 .(ds 0x08005694 0x10 str.00000000010C)
 
-.(func 0x080056a4 8 Reset_Handler)
+.(func 0x080056a4 Reset_Handler)
 CCa 0x080056a4 this is SystemInit as thumb address
 CCa 0x080056a8 this is main as thumb address
 
@@ -687,7 +686,7 @@ CCa 0x080056a8 this is main as thumb address
 
 .(d4 0x080056ac 5)
 
-.(func 0x080056c0 16 main)
+.(func 0x080056c0 main)
 
 # 5552: r1 = 2c         
 # 5544: r1 = 5574                     # r1 += pc
