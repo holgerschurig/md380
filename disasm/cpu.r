@@ -110,3 +110,8 @@ f io_CPACE              @ 0xe000ed88 # Coprocessor Access Control Register
 
 # http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0553a/Cihhjgdh.html
 f io_SCR                @ 0xe000ed10 # System Control Register
+
+# http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0553a/CIHIGCIF.html
+f io_NVIC_IPR0          @ 0xe000e400 # Interrupt Priority Register
+f ui_NVIC_ISER0         @ 0xe000e100 # Interrupt Set-enable Register
+f ui_NVIC_ICER0         @ 0xe000e180 # Interrupt Clear-enable Register
