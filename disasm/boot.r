@@ -564,9 +564,10 @@ CCa 0x08004764 GPIO_AF_SPI
 .(func 0x080049b4 unk_080049b0)
 .(func 0x080049ee XXX_080049ee)
 .(func 0x08004a08 call_firmware)
-CCa 0x08004a0c 1 << 11
+CCa 0x08004a0c 1 << 11, internal PTT
 CCa 0x08004a18 1 << 9
 CCa 0x080044a8 Change this immediate from 0x55 to 0xAA to jailbreak the bootloader.
+f. start_dfu @ 0x08004a58
 .(d4 0x08004a6c 10)
 
 .(func 0x08004a94 unk_08004a94)
