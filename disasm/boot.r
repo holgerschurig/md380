@@ -280,7 +280,12 @@ CCa 0x08001a54 USB_OTG_EP0_STATUS_OUT
 .(func 0x08001b3c 52 XXX_08001b3c)
 .(func 0x08001b70 18 XXX_08001b70)
 .(func 0x08001b82 26 XXX_08001b82)
-.(func 0x08001b9c 120 XXX_08001b9c)
+.(func 0x08001b9c 120 XXX_08001b9c_something_with_CRC)
+CCa 0x08001bcc ENABLE
+CCa 0x08001bce RCC_AHB1Periph_CRC
+CCa 0x08001c08 DISABLE
+CCa 0x08001c0a RCC_AHB1Periph_CRC
+
 .(func 0x08001c14 18 XXX_08001c14)
 .(func 0x08001c26 18 XXX_08001c26)
 .(func 0x08001c38 26 XXX_08001c38)
@@ -348,14 +353,36 @@ CCa 0x08002004 FLASH_FLAG_BSY
 .(func 0x08002288 20 DCD_EP_SetAddress)
 .(func 0x0800229c 22 DevConnect)
 .(func 0x080022b2 22 DCD_DevDisconnect)
+
+#############################################################################
+# see usb_bsp_template.c, usb_bsp.c
+
 .(func 0x080022c8 104 USB_OTG_BSP_Init)
+CCa 0x0800231c ENABLE
+CCa 0x0800231e RCC_APB2Periph_SYSCFG
+CCa 0x08002326 ENABLE
+CCa 0x08002328 RCC_AHB2Periph_OTG_FS
+CCa 0x08002308 GPIO_AF_OTG_FS
+CCa 0x0800230a Pin PA11
+CCa 0x08002312 GPIO_AF_OTG_FS
+CCa 0x08002314 Pin PA12
+
+# .(func 0x08003b52 82 GPIO_PinAFConfig)
+# CCa 0x08003b52 r0=io_GPIOx, r1=pinsource, r2=GPIO_AF
+
 .(d4 0x08002330 1)
+
 .(func 0x08002334 42 USB_OTG_BSP_EnableInterrupt)
-.(func 0x0800235e 22 XXX_0800235e)
+CCa 0x0800233e OTG_FS_IRQn
+# calls maybe NVIC_Init, see https://www.mikrocontroller.net/topic/274570
+
+.(func 0x0800235e 22 USB_OTG_BSP_uDelay)
+
 .(func 0x08002374 14 USB_OTG_BSP_mDelay)
 
 #############################################################################
-# see usbd_core.c
+# see usb_bsp_template.c / usbd_core.c
+
 .(func 0x08002384 68 USBD_Init)
 s 0x08002384
 .(func 0x080023c8 4 USBD_DeInit)
@@ -420,7 +447,11 @@ f vec.PEND_SV @ 0x08003082
 .(func 0x08003234 92 XXX_08003234)
 .(func 0x08003290 30 XXX_08003290)
 .(d4 0x080032b0 11)
-.(func 0x080032dc 130 XXX_080032dc)
+
+.(func 0x080032dc 130 XXX_080032dc_maybe_init_spi1)
+CCa 0x080032e0 ENABLE
+CCa 0x080032e2 RCC_APB2Periph_SPI1
+
 .(func 0x0800335e 52 XXX_0800335e)
 .(func 0x08003392 52 XXX_08003392)
 .(func 0x080033c6 76 XXX_080033c6)
@@ -429,29 +460,63 @@ f vec.PEND_SV @ 0x08003082
 .(func 0x080035a4 58 XXX_080035a4)
 .(func 0x080035de 18 XXX_080035de)
 .(func 0x080035f0 34 XXX_080035f0)
-.(func 0x08003612 28 XXX_08003612)
-.(func 0x0800362e 24 XXX_0800362e)
+.(func 0x08003612 28 XXX_08003612)  # something with SPI1
+.(func 0x0800362e 24 XXX_0800362e)  # something with SPI1
 .(func 0x08003646 704 XXX_08003646)
 .(d4 0x08003908 4)
 .(func 0x08003918 52 XXX_08003918)
 .(func 0x0800394c 76 XXX_0800394c)
 .(func 0x08003998 78 XXX_08003998)
 .(func 0x080039e8 10 XXX_080039e8)
-.(func 0x080039f2 32 XXX_080039f2)
-.(func 0x08003a12 32 XXX_08003a12)
-.(func 0x08003a32 32 XXX_08003a32)
+
+#############################################################################
+# see stm32f4xx_rcc.c
+
+.(func 0x080039f2 32 RCC_AHB1PeriphClockCmd)
+CCa 0x080039f4 r1 is NewState
+CCa 0x080039f2 r0 is RCC_AHB1Periph
+
+.(func 0x08003a12 32 RCC_AHB2PeriphClockCmd)
+.(func 0x08003a32 32 RCC_APB2PeriphClockCmd)
 .(d4 0x08003a54 4)
-.(func 0x08003a64 8 XXX_08003a64) # something with io_CRC
-.(func 0x08003a6c 10 XXX_08003a6c)
+
+#############################################################################
+# see stm32f4xx_crc.c
+
+.(func 0x08003a64 8 CRC_ResetDR)
+CCa 0x08003a66 CRC_CR_RESET
+
+.(func 0x08003a6c 10 CRC_CalcCRC)
 .(d4 0x08003a78 2)
-.(func 0x08003a80 166 XXX_08003a80)
-.(func 0x08003b26 22 XXX_08003b26)
-.(func 0x08003b3c 4 XXX_08003b3c)
-.(func 0x08003b40 4 XXX_08003b40)
-.(func 0x08003b44 14 XXX_08003b44)
-.(func 0x08003b52 82 XXX_08003b52)
-.(func 0x08003ba4 10 XXX_08003ba4)
-.(func 0x08003bae 104 XXX_08003bae)
+
+#############################################################################
+# see stm32f4xx_gpio.c
+
+.(func 0x08003a80 166 GPIO_Init)
+CCa 0x08003a80 r0=io_GPIOx, r1=*GPIO_InitStruct
+CCa 0x08003a82 r2 holds pinpos
+CCa 0x08003a90 r3 holds pos
+CCa 0x08003a94 r4 holds currentpin
+
+.(func 0x08003b26 22 GPIO_ReadInputDataBit)
+CCa 0x08003b26 r0_io_GPIOx, r1 = has pin mask
+CCa 0x08003b28 read GPIOx input data register
+
+.(func 0x08003b3c 4 GPIO_SetBits)
+CCa 0x08003b3c BSRRL
+
+.(func 0x08003b40 4 GPIO_ResetBits)
+CCa 0x08003b40 BSRRL
+
+.(func 0x08003b44 14 GPIO_WriteBit)
+CCa 0x08003b4a BSRRL
+CCa 0x08003b4e BSRRL
+
+.(func 0x08003b52 82 GPIO_PinAFConfig)
+CCa 0x08003b52 r0=io_GPIOx, r1=pinsource, r2=GPIO_AF
+
+.(func 0x08003ba4 10 XXX_08003ba4_maybe_set_AIRCR)
+.(func 0x08003bae 104 XXX_08003bae_maybe_set_IRQ_Priority)
 .(d4 0x08003c18 5)
 .(func 0x08003c2c 64 XXX_08003c2c)
 .(func 0x08003c6c 28 XXX_08003c6c)
@@ -476,15 +541,34 @@ f vec.PEND_SV @ 0x08003082
 .(d4 0x080043c8 2)
 .(func 0x080043d0 32 XXX_080043d0)
 .(func 0x080043f0 388 unk_080043f0)
-.(func 0x08004574 100 XXX_08004574)
+
+.(func 0x08004574 100 XXX_08004574_maybe_init_gpio)
+CCa 0x08004578 ENABLE
+CCa 0x0800457a RCC_AHB1Periph_GPIOA..E
+CCa 0x08004580 ENABLE
+CCa 0x08004582 RCC_APB2Periph_SYSCFG
+CCa 0x0800458a DISABLE
+CCa 0x0800458c RCC_APB2Periph_TIM1
+
 .(func 0x080045e0 426 XXX_080045e0)
+# NOTE: this function doesn't match the schematics: it sets PC3, PC4, PC5, PC13, PC14 to SPI
+CCa 0x08004728 GPIO_AF_SPI
+CCa 0x08004734 GPIO_AF_SPI
+CCa 0x08004740 GPIO_AF_SPI
+CCa 0x0800474c GPIO_AF_SPI
+CCa 0x08004758 GPIO_AF_SPI
+CCa 0x08004764 GPIO_AF_SPI
+
 .(func 0x0800478a 100 XXX_0800478a)
 .(func 0x080047ee 384 XXX_080047ee)
 .(d4 0x08004970 17)
 
 .(func 0x080049b4 54 unk_080049b0)
 .(func 0x080049ee 54 XXX_080049ee)
-.(func 0x08004a08 98 XXX_08004a08)
+.(func 0x08004a08 98 call_firmware)
+CCa 0x08004a0c 1 << 11
+CCa 0x08004a18 1 << 9
+CCa 0x080044a8 Change this immediate from 0x55 to 0xAA to jailbreak the bootloader.
 .(d4 0x08004a6c 10)
 
 .(func 0x08004a94 80 unk_08004a94)
@@ -565,7 +649,6 @@ f vec.DMA2_Stream3 @ 0x080054ec
 .(ds 0x08005518 40 str.SPI_Flash_Memory2)
 
 .(func 0x08005540 32 XXX_weird_jumptable)
-#af 0x08005540
 #e asm.emustr=0
 #afvr r1 r1_ptr int
 #afvr r4 r4_end int
@@ -732,11 +815,15 @@ f vec.FPU @ 0x08005834
 #
 #############################################################################
 
+.(dv 0x0800c000 firmware_stack)
+.(dv 0x0800c004 firmware_resetvec)
 .(dv 0x2000005c DeviceState2)
 .(dv 0x20000077 wLength)
 .(dv 0x20000114 tMALTab)
 .(dv 0x20000724 usbd_dfu_AltSet)
 .(dv 0x200011c0 DeviceState1)
+.(dv 0x200011dc firmware_entry1)
+.(dv 0x200011e0 firmware_entry0)
 .(dv 0x200011fc Manifest_State)
 .(dv 0x20001200 DeviceStatus)
 .(dv 0x20001204 wBlockNum)
@@ -755,8 +842,3 @@ f vec.FPU @ 0x08005834
 #############################################################################
 
 . cpu.r
-
-
-?e Analyzing functions (aac) ...
-aac
-
