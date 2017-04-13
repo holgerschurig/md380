@@ -45,9 +45,16 @@ e search.in = io.sections.exec
 # Some macros that allow me to format the source code a little bit nicer,
 # i.E. not have the definitions stagger around to much.
 
-# Define a functiona AND analyze it. Analyzation is a prereq for the the "pdf" command
-#(func addr sz name,f sym.$2 $1 @ $0,s $0,af)  # analyze each function, slow
-(func addr sz name,af+ $0 sym.$2)              # don't analyze, use "aa*" later
+# Define a functiona AND analyze it:
+#   fs symbols              put the new symbol into the "symbols" flagspace
+#   f sym.name sz @ addr    define new flag
+#   fs *                    switch back to global flagspace
+#   s addr                  seek to addr so that "af" works
+#   e anal.a2f=1            switch to anal algorithm that doesn't create "fcn.*" symbols
+#   af                      analyze function (so that "pdf" and "f." works)
+#   e anal.a2f=0            switch back to normal analyze algorithm
+#   s-                      undo seek
+(func addr sz name,fs symbols,f sym.$2 $1 @ $0,fs *,s $0,e anal.a2f=1,af,e anal.a2f=1,s-)
 
 # Define things that reside in data parts of the image
 (d4 addr size,Cd 4 $1 @ $0)            # define 4-byte long word
@@ -86,19 +93,19 @@ CCa 0x0800020c USB_REQ_TYPE_MASK
 CCa 0x08000212 USB_REQ_TYPE_STANDARD
 CCa 0x08000216 USB_REQ_TYPE_CLASS
 CCa 0x0800021a req.bRequest
-f case.dnload @ 0x8000234
-f case.upload @ 0x800023a
-f case.getstatus @ 0x8000240
-f case.clearstatus @ 0x8000246
-f case.getstate @ 0x800024c
-f case.abort @ 0x8000252
-f case.detach @ 0x8000258
-f case.default @ 0x800025e
+f. case.dnload @ 0x8000234
+f. case.upload @ 0x800023a
+f. case.getstatus @ 0x8000240
+f. case.clearstatus @ 0x8000246
+f. case.getstate @ 0x800024c
+f. case.abort @ 0x8000252
+f. case.detach @ 0x8000258
+f. case.default @ 0x800025e
 CCa 0x08000262 USBD_FAIL
 CCa 0x08000266 req.bRequest
-f case.req_get_descriptor @ 0x8000276
-f case.req_get_interface @ 0x800029c
-f case.req_set_interface @ 0x80002a8
+f. case.req_get_descriptor @ 0x8000276
+f. case.req_get_interface @ 0x800029c
+f. case.req_set_interface @ 0x80002a8
 CCa 0x0800027e DFU_DESCRIPTOR_TYPE
 
 # XXX quite interesting function, because this function
@@ -110,17 +117,17 @@ CCa 0x0800030a CMD_SETADDRESSPOINTER
 CCa 0x0800036e CMD_ERASE
 CCa 0x080003e8 CMD_MD380_ACCESS_CLOCK_MEMORY?
 CCa 0x08000412 CMD_MD380_INTERNAL?
-f loc.cmd_md380_programming @ 0x8000444
-f loc.cmd_md380_set_time @ 0x8000494
-f loc.cmd_md380_internal_3 @ 0x80004a8
-f loc.cmd_md380_internal_4 @ 0x80004da
-f loc.cmd_md380_reboot @ 0x800050c
-f loc.cmd_md380_begin_fwupd @ 0x8000520
+f. loc.cmd_md380_programming @ 0x8000444
+f. loc.cmd_md380_set_time @ 0x8000494
+f. loc.cmd_md380_internal_3 @ 0x80004a8
+f. loc.cmd_md380_internal_4 @ 0x80004da
+f. loc.cmd_md380_reboot @ 0x800050c
+f. loc.cmd_md380_begin_fwupd @ 0x8000520
 CCa 0x0800054a Command 0xC4 with wLength 10
 CCa 0x0800059e Command 0xB2 with wLength 33
 CCa 0x080005e2 Command 0xB3 with wLength 25
 CCa 0x0800062e Command 0xD5 with wLength 513
-f loc.ep0txsent.dnbusy @ 0x80007e2
+f. loc.ep0txsent.dnbusy @ 0x80007e2
 CCa 0x080007e8 STATE_dfuMANIFEST
 # Later there is code with command b4
 
@@ -147,12 +154,12 @@ CCa 0x08000912 STATE_dfuMANIFEST_SYNC
 CCa 0x08000958 STATE_dfuIDLE
 CCa 0x08000962 STATE_dfuUPLOAD_IDLE
 CCa 0x08000984 XXX here it get's interesting
-f loc.upload_1 @ 0x80009b8
-f loc.upload_3 @ 0x8000a90
-f loc.upload_4 @ 0x8000af6
-f loc.upload_5 @ 0x8000b56
-f loc.upload_7 @ 0x8000bb8
-f loc.upload_x32 @ 0x8000c14
+f. loc.upload_1 @ 0x80009b8
+f. loc.upload_3 @ 0x8000a90
+f. loc.upload_4 @ 0x8000af6
+f. loc.upload_5 @ 0x8000b56
+f. loc.upload_7 @ 0x8000bb8
+f. loc.upload_x32 @ 0x8000c14
 
 # TODO .(dv 0x0004b510 Pointer)
 .(d4 0x08000dd4 11)
@@ -220,12 +227,12 @@ CCa 0x08001586 USB_DESC_TYPE_CONFIGURATION
 CCa 0x0800158a USB_DESC_TYPE_STRING
 CCa 0x0800158e USB_DESC_TYPE_DEVICE_QUALIFIER
 CCa 0x08001592 USB_DESC_TYPE_OTHER_SPEED_CONFIGURATION
-f loc.getdesc_type @ 0x8001598
-f loc.getdesc_conf @ 0x80015d6
-f loc.getdesc_string @ 0x80015ec
-f loc.getdesc_devqual @ 0x800166a
-f loc.getdesc_other_speedconf @ 0x8001674
-f loc.getdesc_default @ 0x800167e
+f. loc.getdesc_type @ 0x8001598
+f. loc.getdesc_conf @ 0x80015d6
+f. loc.getdesc_string @ 0x80015ec
+f. loc.getdesc_devqual @ 0x800166a
+f. loc.getdesc_other_speedconf @ 0x8001674
+f. loc.getdesc_default @ 0x800167e
 
 .(func 0x0800169c 88 USBD_SetAddress)
 CCa 0x080016b6 USB_OTG_CONFIGURED
