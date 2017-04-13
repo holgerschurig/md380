@@ -23,6 +23,7 @@ aeim
 e cfg.fortunes = false
 e asm.lines.ret = true
 e asm.cmtcol = 55
+e asm.maxrefs = 50
 e scr.utf8 = 1
 e scr.nkey = func
 e asm.emustr = true
