@@ -8,7 +8,7 @@ e asm.bits = 16
 ## Setup sections. Radara will normally get sections from ELF
 ## images, but our boot.bin is a "pure" binary.
 S 0x08000000 0x08000000 0x0000c000 0x0000c000 boot  -r-x
-#Sa arm 16 0x08000000
+s 0x08000000
 S 0x10000000 0x10000000 0x00010000 0x00010000 TCRAM mrw
 S 0x20000000 0x20000000 0x000f0000 0x000f0000 ram   mrwx
 S 0xe0000000 0xe0000000 0x01000000 0x01000000 m4    mrw
@@ -384,7 +384,6 @@ CCa 0x0800233e OTG_FS_IRQn
 # see usb_bsp_template.c / usbd_core.c
 
 .(func 0x08002384 68 USBD_Init)
-s 0x08002384
 .(func 0x080023c8 4 USBD_DeInit)
 .(func 0x080023cc 82 USBD_SetupStage)
 .(func 0x0800241e 148 XXX_0800241e)
