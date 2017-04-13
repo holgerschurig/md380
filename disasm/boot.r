@@ -64,12 +64,6 @@ e search.in = io.sections.exec
 
 
 #############################################################################
-# Load findings from the md380tools project:
-. bootloader.r
-
-
-
-#############################################################################
 # see core_cm4.h
 
 .(d4 0x08000000 98)
@@ -322,20 +316,29 @@ CCa 0x08001f90 isolate the OPTLOCK bit
 
 .(func 0x08001fa2 14 FLASH_LockOpt)
 
+.(func 0x08001fb0 24 rdp_lock)
+CCa 0x08001fb0 rdp_lock(0x55) locks the device, rdp_lock(0xAA) unlocks it.
+
 # sym.rdp_lock
 CCa 0x08001fd0 set OPTSTRT
+
+.(func 0x08001fc8 28 rdp_applylock)
+CCa 0x08001fc8 After calling rdp_lock(), rdp_applylock() sets the state.
+
+.(func 0x08001fe4 22 rdp_isnotlocked)
+CCa 0x08001fe4 Returns 1 if RDP is not locked.  0 if it is locked.
 
 .(func 0x08001ffa 58 FLASH_GetFlagStatus)
 CCa 0x08002000 isolate BSY bit
 CCa 0x08002004 FLASH_FLAG_BSY
 
+.(d4 0x08002038 10)
+.(func 0x08002060 40 flash_wait)
+
 #############################################################################
 # see usb_dcd.c
 
-.(d4 0x08002038 10)
-
 .(func 0x08002088 150 DCD_Init)
-
 .(func 0x0800211e 90 DCD_EP_Close)
 .(func 0x08002178 70 DCD_EP_PrepareRx)
 .(func 0x080021be 62 DCD_EP_Tx)
