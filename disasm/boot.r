@@ -524,7 +524,7 @@ CCa 0x08003b52 r0=io_GPIOx, r1=pinsource, r2=GPIO_AF
 .(func 0x08003ca4 XXX_08003ca4)
 .(d4 0x08003d80 3)
 .(func 0x08003d8c XXX_08003d8c)
-.(func 0x08003de8 otg_fs_int)
+.(func 0x08003de8 STM32_USBO_OTG_ISR_Handler)
 .(func 0x08003eba XXX_08003eba)
 .(func 0x08003f02 XXX_08003f02)
 .(func 0x08003f8a XXX_08003f8a)
