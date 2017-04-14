@@ -12,13 +12,12 @@ https://github.com/pchickey/md380-re.
 
 Goal: I want to write my own firmware for the MD380, similar to the
 [[https://github.com/pchickey/md380-re][md380-re]] project. If I'm successful, I actually want to be able to run
-this firmware :-)
+this firmware :-) But don't hold you breath: most software projects on
+GitHub/BitBucket/etc are abandonware (e.g. md380-re), so why should
+this project should have a better future?!?!
 
-And, to get my feet wet a bit, i first want to understand the Tytera
+To get my feet wet a bit, i first want to understand the Tytera
 recovery bootloader, µC/OS and RTOS a bit.
-
-This document / git project is just an unsorted grab bag with my
-findings.
 
 Holger, DH3HS
 
@@ -114,9 +113,9 @@ Similar devices:
 - RM: Reference Manual
 - PM: Programming Manual
 
-These chips are used in the [[http://www.pc5e.nl/downloads/md380/documents/MD-380UHF-RF-schematic.pdf][schematics]]:
+These integrated are used according to the [[http://www.pc5e.nl/downloads/md380/documents/MD-380UHF-RF-schematic.pdf][schematics]] (which is known to be not exact):
 
-| Chip         | Type          | Usage                                       | Local PDFs       |
+| IC           | Type          | Usage                                       | Local PDFs       |
 |--------------+---------------+---------------------------------------------+------------------|
 | U101<<U101>> | NJM2902V      | Quad OpAmp, AF_OUT to [[QT_DQT_IN][QT_DQT_IN]]             | [[file:doc/NJM2902_OpAmp.pdf][DS]]               |
 | U102<<U102>> | NJM2902V      | Quad OpAmp, AF_OUT to [[2T/5T][2T/5T]] and VOL_OUT     | [[file:doc/NJM2902_OpAmp.pdf][DS]]               |
@@ -132,7 +131,7 @@ These chips are used in the [[http://www.pc5e.nl/downloads/md380/documents/MD-38
 | U303         | PST9124       | MCU and C59000 reset circuit                | [[file:doc/PST9124_Reset.pdf][DS]]               |
 | U303         | missing       | not in schema                               |                  |
 | U305         | nc?           | Flash                                       |                  |
-| U307         | HR_V3000S     | ALPU AES key chip?                          |                  |
+| U307         | HR_V3000S     | ALPU AES key?                               |                  |
 | U401         | LM2734X       | Buck converter for "3V3"                    | [[file:doc/LM2734X_Buck_Converter.pdf][DS]]               |
 | U402         | XC6204B502MR  | LDO regulator for "5T"                      | [[file:doc/XC6204_PMIC.pdf][DS]]               |
 | U403         | XC6204B502MR  | LDO regulator for "5R"                      | [[file:doc/XC6204_PMIC.pdf][DS]]               |
@@ -156,110 +155,117 @@ These chips are used in the [[http://www.pc5e.nl/downloads/md380/documents/MD-38
 
 Schematics page 3, left side of CPU
 
-Note: the `CS8x0: "blah"' texts denote the signal description from the
+Note 1: the schematics is known to be not correct, so take the
+information here with caution. Processor pins that I haven't verified
+are still in parentheses. I'll use the disassembly of the bootloader,
+firmware, the applets in the md380tools project or information from
+the GPIO alternate function registers for this, but so far I'm quite
+at the beginning ...
+
+Note 2: the `CS8x0: blah' texts denote the signal description from the
 CS 8x0 Service manual. They might be wrong or misleading, especially
 the active high/low notations. But they give an additional hint ...
 
 | Processor pin | Signal                 | Dir | Notes                                                          |
 |---------------+------------------------+-----+----------------------------------------------------------------|
-| PA10          | DMR_SW<<DMR_SW>>       | I   | CS8x0: "DMR Receive IF Switch(High Active)"                    |
-| PA9           | VCOVCC_SW<<VCOVCC_SW>> | O?  | CS8x0: "RXVCO/TXVCO Control(High for RX)"                      |
-| PB11          | ECN3                   | I?  | encoder switch, probably for the channel                       |
-| PB10          | ECN2                   | I?  | encoder                                                        |
-| PE15          | ECN1                   | I?  | encoder                                                        |
-| PE14          | ENC0                   | I?  | encoder                                                        |
-| PE13          | FM_MUTE                | O   | mutes AF_OUT, VOL_OUT, 2T/5T, CS8x0: "FM RX Mute(High Active)" |
-| PE12          | EXT_PTT                | I?  | 3.5mm jack shield                                              |
-| PE11          | PTT_KEY                | I   | hardware PTT key                                               |
-| PE10          | LCD_D7                 |     | [[lcd][LCD]]                                                            |
-| PE9           | LCD_D6                 |     | [[lcd][LCD]]                                                            |
-| PE8           | LCD_D5                 |     | [[lcd][LCD]]                                                            |
-| PE7           | LCD_D4                 |     | [[lcd][LCD]]                                                            |
-| PB2           | FM_SW<<FM_SW>>         | O   | CS8x0: "FM Receive IF Switch(High Active)"                     |
-| PB1           | BUSY                   | I   | GT3136, CS8x0: "Carrier Detect Input"                          |
-| PB0           | RSSI                   | I?  | GT3136, CS8x0: "RSSI Detect Input"                             |
-| PC5           | 5TC                    | O   | PMIC XC6204, controls signal "5T"                              |
-| PC4           | RF_APC_SW<<RF_APC_SW>> | O   | M2904 OPAMP, CS8x0: "RF Amplifier Switch(High Active)"         |
-| PA7           | POW_C                  | O   | control BAT7V5, maybe used for power off                       |
-| PA6           | K1                     |     | keypad?                                                        |
-| PA5           | MOD2_BIAS              | O   | CS8x0: "TCXO Frequency D/A Adjust"                             |
-| PA4           | APC/TV                 | O   | M2904 OPAMP, sender? CS8x0: "APC/TV D/A Output"                |
-| PA3           | VOX<<VOX>>             | I   | from microphone integrator                                     |
-| PA2           | QT_DQT_IN<<QT_DQT_IN>> | I   | audio output from [[U101][U101]], switched by [[FM_SW][FM_SW]]                      |
-| PA13          | W/N_SW                 | O   | wide/narrow switch?                                            |
+| (PA10)        | DMR_SW<<DMR_SW>>       | I   | CS8x0: "DMR Receive IF Switch(High Active)"                    |
+| (PA9)         | VCOVCC_SW<<VCOVCC_SW>> | O?  | CS8x0: "RXVCO/TXVCO Control(High for RX)"                      |
+| (PB11)        | ECN3                   | I?  | encoder switch, probably for the channel                       |
+| (PB10)        | ECN2                   | I?  | encoder                                                        |
+| (PE15)        | ECN1                   | I?  | encoder                                                        |
+| (PE14)        | ENC0                   | I?  | encoder                                                        |
+| (PE13)        | FM_MUTE                | O   | mutes AF_OUT, VOL_OUT, 2T/5T, CS8x0: "FM RX Mute(High Active)" |
+| (PE12)        | EXT_PTT                | I?  | 3.5mm jack shield                                              |
+| (PE11)        | PTT_KEY                | I   | hardware PTT key                                               |
+| (PE10)        | LCD_D7                 |     | [[lcd][LCD]]                                                            |
+| (PE9)         | LCD_D6                 |     | [[lcd][LCD]]                                                            |
+| (PE8)         | LCD_D5                 |     | [[lcd][LCD]]                                                            |
+| (PE7)         | LCD_D4                 |     | [[lcd][LCD]]                                                            |
+| (PB2)         | FM_SW<<FM_SW>>         | O   | CS8x0: "FM Receive IF Switch(High Active)"                     |
+| (PB1)         | BUSY                   | I   | GT3136, CS8x0: "Carrier Detect Input"                          |
+| (PB0)         | RSSI                   | I?  | GT3136, CS8x0: "RSSI Detect Input"                             |
+| (PC5)         | 5TC                    | O   | PMIC XC6204, controls signal "5T"                              |
+| (PC4)         | RF_APC_SW<<RF_APC_SW>> | O   | M2904 OPAMP, CS8x0: "RF Amplifier Switch(High Active)"         |
+| (PA7)         | POW_C                  | O   | control BAT7V5, maybe used for power off                       |
+| (PA6)         | K1                     |     | keypad?                                                        |
+| (PA5)         | MOD2_BIAS              | O   | CS8x0: "TCXO Frequency D/A Adjust"                             |
+| (PA4)         | APC/TV                 | O   | M2904 OPAMP, sender? CS8x0: "APC/TV D/A Output"                |
+| (PA3)         | VOX<<VOX>>             | I   | from microphone integrator                                     |
+| (PA2)         | QT_DQT_IN<<QT_DQT_IN>> | I   | audio output from [[U101][U101]], switched by [[FM_SW][FM_SW]]                      |
+| (PA13)        | W/N_SW                 | O   | wide/narrow switch?                                            |
 
 
 Schematics page 3, bottom side of CPU
 
 | Processor pin | Signal                      | Dir | Notes                                                                |   |   |   |   |
 |---------------+-----------------------------+-----+----------------------------------------------------------------------+---+---+---+---|
-| PA8           | SAVE                        | O   | PMIC XC6204, control signal "5V"                                     |   |   |   |   |
-| PC9           | 5RC                         | O   | PMIC XC6204, control signal "5R"                                     |   |   |   |   |
-| PC8           | BEEP                        | O   | goes to VOL_OUT,  2T/5T, DTMF_OUT, CS8x0: "BEEP/ALARM/DTMF Output"   |   |   |   |   |
-| PC7           | CTC/DCS_OUT                 | O   | M2904 OPAMP, CS8x0: "CTCSS/DCS TCXO Output"                          |   |   |   |   |
-| PC6           | LCD_LAMP                    | O   | [[lcd][LCD]] backlight                                                        |   |   |   |   |
-| PD15          | LCD_D1                      |     | [[lcd][LCD]]                                                                  |   |   |   |   |
-| PA1           | BAT                         | I?  | maybe to measure the battery power                                   |   |   |   |   |
-| PA0           | TX_LED                      | O   | red                                                                  |   |   |   |   |
-| PC3           | 2T/5T<<2T/5T>>              | I   | HR C5000, CS8x0: "2T/5T data input", this is AF_OFOUT amplified [[U102][U102]] |   |   |   |   |
-| PC2           | RF_TX_INTER                 | I?  | HR C5000                                                             |   |   |   |   |
-| PC1           | SYS_INTER                   | I?  | HR C5000                                                             |   |   |   |   |
-| PC0           | TIME_SLOT_INTER             | I?  | HR C5000                                                             |   |   |   |   |
-| PC15          | OSC32_OUT                   |     |                                                                      |   |   |   |   |
-| PC14          | OSC_32IN                    |     |                                                                      |   |   |   |   |
-| PC13          | BSHIFT                      | O   | goes to 8MHz quartz                                                  |   |   |   |   |
-| PE5           | PLL_DAT<<PLL_DAT>>, DMR_SDI |     | SKY72310 DATA, HR C5000 U_SDI                                        |   |   |   |   |
-| PE4           | DMR_SDO                     |     | HR C5000 U_SDO                                                       |   |   |   |   |
-| PE3           | DMR_SCL, PLL_CLK<<PLL_CLK>> |     | HR C5000 U_SCLK, HR C5000 CLK                                        |   |   |   |   |
-| PE2           | DMR_CS                      |     | HR C5000 U_CS                                                        |   |   |   |   |
-| PE6           | DMR_SLEEP                   | O?  | HR C5000 PWD, CS8x0: "DMR POWERDOWN(High Active)"                    |   |   |   |   |
+| (PA8)         | SAVE                        | O   | PMIC XC6204, control signal "5V"                                     |   |   |   |   |
+| (PC9)         | 5RC                         | O   | PMIC XC6204, control signal "5R"                                     |   |   |   |   |
+| (PC8)         | BEEP                        | O   | goes to VOL_OUT,  2T/5T, DTMF_OUT, CS8x0: "BEEP/ALARM/DTMF Output"   |   |   |   |   |
+| (PC7)         | CTC/DCS_OUT                 | O   | M2904 OPAMP, CS8x0: "CTCSS/DCS TCXO Output"                          |   |   |   |   |
+| (PC6)         | LCD_LAMP                    | O   | [[lcd][LCD]] backlight                                                        |   |   |   |   |
+| (PD15)        | LCD_D1                      |     | [[lcd][LCD]]                                                                  |   |   |   |   |
+| (PA1)         | BAT                         | I?  | maybe to measure the battery power                                   |   |   |   |   |
+| (PA0)         | TX_LED                      | O   | red                                                                  |   |   |   |   |
+| (PC3)         | 2T/5T<<2T/5T>>              | I   | HR C5000, CS8x0: "2T/5T data input", this is AF_OFOUT amplified [[U102][U102]] |   |   |   |   |
+| (PC2)         | RF_TX_INTER                 | I?  | HR C5000                                                             |   |   |   |   |
+| (PC1)         | SYS_INTER                   | I?  | HR C5000                                                             |   |   |   |   |
+| (PC0)         | TIME_SLOT_INTER             | I?  | HR C5000                                                             |   |   |   |   |
+| (PC15)        | OSC32_OUT                   |     |                                                                      |   |   |   |   |
+| (PC14)        | OSC_32IN                    |     |                                                                      |   |   |   |   |
+| (PC13)        | BSHIFT                      | O   | goes to 8MHz quartz                                                  |   |   |   |   |
+| (PE5)         | PLL_DAT<<PLL_DAT>>, DMR_SDI |     | SKY72310 DATA, HR C5000 U_SDI                                        |   |   |   |   |
+| (PE4)         | DMR_SDO                     |     | HR C5000 U_SDO                                                       |   |   |   |   |
+| (PE3)         | DMR_SCL, PLL_CLK<<PLL_CLK>> |     | HR C5000 U_SCLK, HR C5000 CLK                                        |   |   |   |   |
+| (PE2)         | DMR_CS                      |     | HR C5000 U_CS                                                        |   |   |   |   |
+| (PE6)         | DMR_SLEEP                   | O?  | HR C5000 PWD, CS8x0: "DMR POWERDOWN(High Active)"                    |   |   |   |   |
 
 
 Schematics page 3, right side of CPU
 
 | Processor pin | Signal                 | Dir | Notes                                                                        |
 |---------------+------------------------+-----+------------------------------------------------------------------------------|
-| PA14          | MICPWR_SW<<MICPWR_SW>> | O   | PMIC XC6204, control signal "MIC_5V", CS8x0: "MIC Power Switch(High Active)" |
-| PA15          | I2S_FS                 |     | HR C5000 C_CS                                                                |
-| PC10          | I2S_CK                 |     | HR C5000 C_SCLK                                                              |
-| PC11          | I2S_RX                 |     | HR C5000 C_SDI                                                               |
-| PC12          | I2S_TX                 |     | HR C5000 C_SDO                                                               |
-| PD0           | LCD_D2                 |     | [[lcd][LCD]]                                                                          |
-| PD1           | LCD_D3                 |     | [[lcd][LCD]]                                                                          |
-| PD2           | K2                     |     | keypad?                                                                      |
-| PD3           | K3                     |     | keypad?                                                                      |
-| PD4           | LCD_RD                 |     | [[lcd][LCD]]                                                                          |
-| PD5           | LCD_WR                 |     | [[lcd][LCD]]                                                                          |
-| PD6           | LCD_CS                 |     | [[lcd][LCD]]                                                                          |
-| PD7           | FLASH_CS               |     | W25Q128FVSIG CSN                                                             |
-| PB3           | FLASH_SCLK             |     | W25Q128FVSIG SCK                                                             |
-| PB4           | FLASH_SDO              |     | W25Q128FVSIG SO                                                              |
-| PB5           | FLASH_SDI              |     | W25Q128FVSIG SI                                                              |
-| PB6           | SCL                    |     | HR V3000S, ALPU AES key chip?                                                |
-| PB7           | SDA                    |     | HR V3000S, ALPU AES key chip?                                                |
-| PB8           | SPK_C                  | O   | speaker mute?                                                                |
-| PB9           | AFCO                   |     |                                                                              |
-| PE0           | RX_LED                 |     | green                                                                        |
-| PE1           | nc                     |     | nc                                                                           |
-| PA11          | USB_D-                 |     | USB                                                                          |
-| PA12          | USB_D+                 |     | USB                                                                          |
+| (PA14)        | MICPWR_SW<<MICPWR_SW>> | O   | PMIC XC6204, control signal "MIC_5V", CS8x0: "MIC Power Switch(High Active)" |
+| (PA15)        | I2S_FS                 |     | HR C5000 C_CS                                                                |
+| (PC10)        | I2S_CK                 |     | HR C5000 C_SCLK                                                              |
+| (PC11)        | I2S_RX                 |     | HR C5000 C_SDI                                                               |
+| (PC12)        | I2S_TX                 |     | HR C5000 C_SDO                                                               |
+| (PD0)         | LCD_D2                 |     | [[lcd][LCD]]                                                                          |
+| (PD1)         | LCD_D3                 |     | [[lcd][LCD]]                                                                          |
+| (PD2)         | K2                     |     | keypad?                                                                      |
+| (PD3)         | K3                     |     | keypad?                                                                      |
+| (PD4)         | LCD_RD                 |     | [[lcd][LCD]]                                                                          |
+| (PD5)         | LCD_WR                 |     | [[lcd][LCD]]                                                                          |
+| (PD6)         | LCD_CS                 |     | [[lcd][LCD]]                                                                          |
+| (PD7)         | FLASH_CS               |     | W25Q128FVSIG CSN                                                             |
+| (PB3)         | FLASH_SCLK             |     | W25Q128FVSIG SCK                                                             |
+| (PB4)         | FLASH_SDO              |     | W25Q128FVSIG SO                                                              |
+| (PB5)         | FLASH_SDI              |     | W25Q128FVSIG SI                                                              |
+| (PB6)         | SCL                    |     | HR V3000S, ALPU AES key?                                                 |
+| (PB7)         | SDA                    |     | HR V3000S, ALPU AES key?                                                |
+| (PB8)         | SPK_C                  | O   | speaker mute?                                                                |
+| (PB9)         | AFCO                   |     |                                                                              |
+| (PE0)         | RX_LED                 |     | green                                                                        |
+| (PE1)         | nc                     |     | nc                                                                           |
+| (PA11)        | USB_D-                 |     | USB                                                                          |
+| (PA12)        | USB_D+                 |     | USB                                                                          |
 
 
 Schematics page 3, top side of CPU
 
 | Processor pin | Signal           | Dir | Notes           |
 |---------------+------------------+-----+-----------------|
-| PB12          | V_CS             |     | HR C5000 V_CS   |
-| PB13          | V_SCLK           |     | HR C5000 V_SCLK |
-| PB14          | V_SDO            |     | HR C5000 V_SDO  |
-| PB15          | V_SDI            |     | HR C5000 V_SDI  |
-| PD8           | FLASH_CS1        |     | nc?             |
-| PD9           | FLASH_CS2        |     | nc?             |
-| PD10          | PLL_LD<<PLL_LD>> |     | SKY72310 PS     |
-| PD11          | PLL_CS<<PLL_CS>> |     | SKY72310 /CS    |
-| PD12          | LCD_RS           |     | [[lcd][LCD]]             |
-| PD13          | LCD_RST          |     | [[lcd][LCD]]             |
-| PD14          | LCD_D0           |     | [[lcd][LCD]]             |
+| (PB12)        | V_CS             |     | HR C5000 V_CS   |
+| (PB13)        | V_SCLK           |     | HR C5000 V_SCLK |
+| (PB14)        | V_SDO            |     | HR C5000 V_SDO  |
+| (PB15)        | V_SDI            |     | HR C5000 V_SDI  |
+| (PD8)         | FLASH_CS1        |     | nc?             |
+| (PD9)         | FLASH_CS2        |     | nc?             |
+| (PD10)        | PLL_LD<<PLL_LD>> |     | SKY72310 PS     |
+| (PD11)        | PLL_CS<<PLL_CS>> |     | SKY72310 /CS    |
+| (PD12)        | LCD_RS           |     | [[lcd][LCD]]             |
+| (PD13)        | LCD_RST          |     | [[lcd][LCD]]             |
+| (PD14)        | LCD_D0           |     | [[lcd][LCD]]             |
 |---------------+------------------+-----+-----------------|
 
 ** <<lcd>>LCD
