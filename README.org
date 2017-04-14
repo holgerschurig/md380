@@ -2,7 +2,6 @@
 #+AUTHOR: Holger Schurig, DH3HS
 #+TOC: headlines 3
 #+LANGUAGE: en
-#
 # @compile: (org-html-export-to-html)
 
 * Introduction
